@@ -83,9 +83,6 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Install CocoaPods dependencies
-        run: cd ios && pod install
-
       - name: Build iOS (debug)
         run: flutter build ios --debug --no-codesign
 
@@ -191,9 +188,6 @@ jobs:
 
       - name: Get dependencies
         run: flutter pub get
-
-      - name: Install CocoaPods dependencies
-        run: cd macos && pod install
 
       - name: Build macOS (release)
         run: flutter build macos --release
