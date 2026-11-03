@@ -1,0 +1,28 @@
+# CODEOWNERS
+# These users/groups will be requested for review when someone opens a PR modifying these files
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global owners (review all changes)
+* @your-github-username
+
+# Platform-specific
+/android/ @your-github-username
+/ios/ @your-github-username
+/macos/ @your-github-username
+/windows/ @your-github-username
+/linux/ @your-github-username
+/web/ @your-github-username
+
+# Core application code
+/lib/ @your-github-username
+
+# CI/CD
+/.github/ @your-github-username
+
+# Build configuration
+/pubspec.yaml @your-github-username
+/analysis_options.yaml @your-github-username
+
+# Bible database assets (large files managed via Git LFS)
+/bibles/ @your-github-username
+/assets/bible/ @your-github-username
