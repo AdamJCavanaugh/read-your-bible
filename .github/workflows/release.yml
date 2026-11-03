@@ -14,13 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: Setup Flutter
         uses: flutter-actions/setup-flutter@v3
         with:
           channel: stable
-          version: '3.19.0'
+          version: '3.24.0'
 
       - name: Get dependencies
         run: flutter pub get
@@ -32,7 +32,7 @@ jobs:
         run: flutter build appbundle --release
 
       - name: Upload Android artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.0
         with:
           name: android-release
           path: |
@@ -45,13 +45,13 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: Setup Flutter
         uses: flutter-actions/setup-flutter@v3
         with:
           channel: stable
-          version: '3.19.0'
+          version: '3.24.0'
 
       - name: Get dependencies
         run: flutter pub get
@@ -63,7 +63,7 @@ jobs:
         run: flutter build ios --release --no-codesign
 
       - name: Upload iOS artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.0
         with:
           name: ios-release
           path: build/ios/iphoneos/Runner.app
@@ -74,13 +74,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: Setup Flutter
         uses: flutter-actions/setup-flutter@v3
         with:
           channel: stable
-          version: '3.19.0'
+          version: '3.24.0'
 
       - name: Get dependencies
         run: flutter pub get
@@ -89,7 +89,7 @@ jobs:
         run: flutter build web --release
 
       - name: Upload Web artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.0
         with:
           name: web-release
           path: build/web/
@@ -100,13 +100,13 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: Setup Flutter
         uses: flutter-actions/setup-flutter@v3
         with:
           channel: stable
-          version: '3.19.0'
+          version: '3.24.0'
 
       - name: Get dependencies
         run: flutter pub get
@@ -115,7 +115,7 @@ jobs:
         run: flutter build windows --release
 
       - name: Upload Windows artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.0
         with:
           name: windows-release
           path: build/windows/x64/release/bundle/
@@ -126,13 +126,13 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: Setup Flutter
         uses: flutter-actions/setup-flutter@v3
         with:
           channel: stable
-          version: '3.19.0'
+          version: '3.24.0'
 
       - name: Get dependencies
         run: flutter pub get
@@ -144,7 +144,7 @@ jobs:
         run: flutter build macos --release
 
       - name: Upload macOS artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.0
         with:
           name: macos-release
           path: build/macos/Build/Products/Release/
@@ -155,13 +155,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: Setup Flutter
         uses: flutter-actions/setup-flutter@v3
         with:
           channel: stable
-          version: '3.19.0'
+          version: '3.24.0'
 
       - name: Install Linux dependencies
         run: |
@@ -175,7 +175,7 @@ jobs:
         run: flutter build linux --release
 
       - name: Upload Linux artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.0
         with:
           name: linux-release
           path: build/linux/x64/release/bundle/
@@ -187,7 +187,7 @@ jobs:
     needs: [build-android, build-ios, build-web, build-windows, build-macos, build-linux]
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v4.2.1
         with:
           path: artifacts
 
@@ -234,7 +234,7 @@ jobs:
           fi
 
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2.2.1
         with:
           tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
