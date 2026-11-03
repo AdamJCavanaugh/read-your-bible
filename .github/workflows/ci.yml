@@ -70,7 +70,6 @@ jobs:
     name: Build iOS
     runs-on: macos-latest
     needs: analyze
-    if: runner.os == 'macOS'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
