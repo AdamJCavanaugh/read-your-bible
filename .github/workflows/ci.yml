@@ -59,7 +59,7 @@ jobs:
         run: flutter build appbundle --release
 
       - name: Upload Android artifacts
-        uses: actions/upload-artifact@v4.6.0
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: android-build
           path: |
@@ -113,7 +113,7 @@ jobs:
         run: flutter build web --release
 
       - name: Upload Web artifacts
-        uses: actions/upload-artifact@v4.6.0
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: web-build
           path: build/web/
@@ -144,7 +144,7 @@ jobs:
         run: flutter build linux --release
 
       - name: Upload Linux artifacts
-        uses: actions/upload-artifact@v4.6.0
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: linux-build
           path: build/linux/x64/release/bundle/
@@ -170,7 +170,7 @@ jobs:
         run: flutter build windows --release
 
       - name: Upload Windows artifacts
-        uses: actions/upload-artifact@v4.6.0
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: windows-build
           path: build/windows/x64/release/bundle/
@@ -199,7 +199,7 @@ jobs:
         run: flutter build macos --release
 
       - name: Upload macOS artifacts
-        uses: actions/upload-artifact@v4.6.0
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: macos-build
           path: build/macos/Build/Products/Release/
