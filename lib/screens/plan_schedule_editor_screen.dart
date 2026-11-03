@@ -365,7 +365,7 @@ class _PlanScheduleEditorScreenState extends State<PlanScheduleEditorScreen> {
             child: ListView.separated(
               padding: const EdgeInsets.all(20),
               itemCount: filteredReadings.length,
-              separatorBuilder: (_, _) => const SizedBox(height: 8),
+              separatorBuilder: (context, index) => const SizedBox(height: 8),
               itemBuilder: (context, index) {
                 final reading = filteredReadings[index];
                 final dayIdx = reading.dayNumber - 1;

@@ -42,7 +42,7 @@ class ProgressRing extends StatelessWidget {
               secondaryColor: theme.colorScheme.secondary,
             ),
           ),
-          ?centerChild,
+          if (centerChild != null) ...[centerChild!],
         ],
       ),
     );
