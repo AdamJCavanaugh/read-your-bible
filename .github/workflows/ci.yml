@@ -173,7 +173,7 @@ jobs:
         uses: actions/upload-artifact@v7.0.2
         with:
           name: windows-build
-          path: build/windows/x64/release/bundle/
+          path: build/windows/**/release/bundle/
 
   build-macos:
     name: Build Desktop (macOS)
