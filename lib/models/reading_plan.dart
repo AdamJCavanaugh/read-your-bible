@@ -117,7 +117,8 @@ class ReadingPlan {
   }
 
   // Whether today's reading for this plan is available (plan has started)
-  bool get hasStarted => DateTime.now().isAfter(startDate.subtract(const Duration(days: 1)));
+  bool get hasStarted =>
+      DateTime.now().isAfter(startDate.subtract(const Duration(days: 1)));
 
   // Whether the plan is complete (all days passed)
   bool get isFinished {
@@ -179,12 +180,12 @@ ReadingPlan createCustomReadingPlan({
   final bookSummary = selectedBooks.length == 66
       ? 'Whole Bible'
       : (selectedBooks.length == 39 && selectedBooks.first == 'Genesis'
-          ? 'Old Testament'
-          : (selectedBooks.length == 27 && selectedBooks.first == 'Matthew'
-              ? 'New Testament'
-              : (selectedBooks.length <= 3
-                  ? selectedBooks.join(', ')
-                  : '${selectedBooks.length} Selected Books')));
+            ? 'Old Testament'
+            : (selectedBooks.length == 27 && selectedBooks.first == 'Matthew'
+                  ? 'New Testament'
+                  : (selectedBooks.length <= 3
+                        ? selectedBooks.join(', ')
+                        : '${selectedBooks.length} Selected Books')));
 
   // 1. Build a complete, flat sequential list of every single verse across all selected books
   final allSequentialVerses = <_VerseRef>[];
@@ -232,27 +233,31 @@ ReadingPlan createCustomReadingPlan({
         for (int i = 1; i < dayVerseSlice.length; i++) {
           final currVerse = dayVerseSlice[i];
           if (currVerse.book != prevVerse.book) {
-            passages.add(Passage(
-              book: firstVerse.book,
-              startChapter: firstVerse.chapter,
-              startVerse: firstVerse.verse,
-              endChapter: prevVerse.chapter,
-              endVerse: prevVerse.verse,
-              verses: [],
-            ));
+            passages.add(
+              Passage(
+                book: firstVerse.book,
+                startChapter: firstVerse.chapter,
+                startVerse: firstVerse.verse,
+                endChapter: prevVerse.chapter,
+                endVerse: prevVerse.verse,
+                verses: [],
+              ),
+            );
             firstVerse = currVerse;
           }
           prevVerse = currVerse;
         }
 
-        passages.add(Passage(
-          book: firstVerse.book,
-          startChapter: firstVerse.chapter,
-          startVerse: firstVerse.verse,
-          endChapter: prevVerse.chapter,
-          endVerse: prevVerse.verse,
-          verses: [],
-        ));
+        passages.add(
+          Passage(
+            book: firstVerse.book,
+            startChapter: firstVerse.chapter,
+            startVerse: firstVerse.verse,
+            endChapter: prevVerse.chapter,
+            endVerse: prevVerse.verse,
+            verses: [],
+          ),
+        );
       }
 
       final passageTitle = passages.map((p) => p.formattedRange).join(' & ');
@@ -269,8 +274,7 @@ ReadingPlan createCustomReadingPlan({
           dayNumber: overallDayNumber,
           title: '$passageTitle$repeatLabel',
           estimatedMinutes: (dayVerseSlice.length / 20).ceil().clamp(3, 30),
-          keyVerse:
-              'Your word is a lamp for my feet, a light on my path.',
+          keyVerse: 'Your word is a lamp for my feet, a light on my path.',
           keyVerseReference: keyVerseRef,
           passages: passages,
         ),
@@ -281,7 +285,8 @@ ReadingPlan createCustomReadingPlan({
   return ReadingPlan(
     id: planId,
     title: title.trim().isEmpty ? 'Custom Plan: $bookSummary' : title.trim(),
-    subtitle: '$bookSummary • $durationDays Days${repeatCount > 1 ? ' ($repeatCount repeats)' : ''}',
+    subtitle:
+        '$bookSummary • $durationDays Days${repeatCount > 1 ? ' ($repeatCount repeats)' : ''}',
     description: description?.trim().isNotEmpty == true
         ? description!
         : 'A personalized $totalDays-day reading plan covering $bookSummary sequentially over $durationDays days with $repeatCount repeat cycle(s).',

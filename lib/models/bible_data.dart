@@ -73,7 +73,10 @@ class BibleData {
     'Revelation',
   ];
 
-  static List<String> get allBooks => [...oldTestamentBooks, ...newTestamentBooks];
+  static List<String> get allBooks => [
+    ...oldTestamentBooks,
+    ...newTestamentBooks,
+  ];
 
   static const Map<String, int> chapterCounts = {
     'Genesis': 50,

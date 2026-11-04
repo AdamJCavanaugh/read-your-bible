@@ -4,17 +4,10 @@ Thank you for your interest in contributing! This document provides guidelines f
 
 ## Table of Contents
 
-- [Code of Conduct](#code-of-conduct)
 - [Getting Started](#getting-started)
 - [Development Workflow](#development-workflow)
 - [Code Style](#code-style)
-- [Testing](#testing)
 - [Pull Request Process](#pull-request-process)
-- [Release Process](#release-process)
-
-## Code of Conduct
-
-By participating in this project, you agree to abide by our [Code of Conduct](CODE_OF_CONDUCT.md). Please read it before contributing.
 
 ## Getting Started
 
@@ -30,13 +23,13 @@ By participating in this project, you agree to abide by our [Code of Conduct](CO
 1. Fork the repository on GitHub
 2. Clone your fork locally:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/read-your-bible.git
+   git clone https://github.com/AdamJCavanaugh/read-your-bible.git
    cd read-your-bible
    ```
 
 3. Add the upstream remote:
    ```bash
-   git remote add upstream https://github.com/ORIGINAL_OWNER/read-your-bible.git
+   git remote add upstream https://github.com/AdamJCavanaugh/read-your-bible.git
    ```
 
 4. Install dependencies:
@@ -47,7 +40,6 @@ By participating in this project, you agree to abide by our [Code of Conduct](CO
 5. Verify the setup:
    ```bash
    flutter analyze
-   flutter test
    flutter run
    ```
 
@@ -55,23 +47,23 @@ By participating in this project, you agree to abide by our [Code of Conduct](CO
 
 ### Branching Strategy
 
-We use a modified Git Flow:
+We use **trunk-based development**:
 
 | Branch | Purpose |
 |--------|---------|
-| `main` | Production-ready code, tagged releases only |
-| `develop` | Integration branch for features |
-| `feature/*` | New features, branched from `develop` |
-| `fix/*` | Bug fixes, branched from `develop` or `main` |
-| `release/*` | Release preparation, branched from `develop` |
+| `main` | Only long-running branch; production-ready code, tagged releases |
+| `feature/*` | Short-lived feature branches, branched from `main` |
+| `fix/*` | Short-lived bug fix branches, branched from `main` |
 | `hotfix/*` | Urgent production fixes, branched from `main` |
+
+**No `develop` branch** - all work integrates directly into `main` via short-lived branches.
 
 ### Creating a Feature Branch
 
 ```bash
 # Ensure you're up to date
-git checkout develop
-git pull upstream develop
+git checkout main
+git pull upstream main
 
 # Create feature branch
 git checkout -b feature/your-feature-name
@@ -88,11 +80,8 @@ git push origin feature/your-feature-name
 # Fetch latest changes
 git fetch upstream
 
-# Rebase onto latest develop (for feature/fix branches)
-git rebase upstream/develop
-
-# Or merge (for release/hotfix branches)
-git merge upstream/develop
+# Rebase onto latest main
+git rebase upstream/main
 ```
 
 ## Code Style
@@ -156,71 +145,6 @@ Future<List<BibleVerse>> getVerses(String reference) async {
 }
 ```
 
-## Testing
-
-### Running Tests
-
-```bash
-# Run all tests
-flutter test
-
-# Run with coverage
-flutter test --coverage
-
-# Run specific test file
-flutter test test/widget_test.dart
-
-# Run tests in watch mode
-flutter test --watch
-```
-
-### Writing Tests
-
-- Place unit tests in `test/` directory matching `lib/` structure
-- Name test files with `_test.dart` suffix
-- Use descriptive test names: `test('should return verses for valid reference', ...)`
-- Follow AAA pattern: Arrange, Act, Assert
-- Mock external dependencies (database, network)
-
-```dart
-// test/services/scripture_service_test.dart
-import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-import 'package:read_your_bible/services/scripture_service.dart';
-
-void main() {
-  group('ScriptureService', () {
-    late ScriptureService service;
-    late MockDatabase mockDb;
-
-    setUp(() {
-      mockDb = MockDatabase();
-      service = ScriptureService(database: mockDb);
-    });
-
-    test('getVerses returns verses for valid reference', () async {
-      // Arrange
-      when(mockDb.query(any)).thenAnswer((_) async => [
-        {'book': 43, 'chapter': 3, 'verse': 16, 'text': 'For God so loved...'}
-      ]);
-
-      // Act
-      final verses = await service.getVerses('John 3:16');
-
-      // Assert
-      expect(verses, hasLength(1));
-      expect(verses.first.text, contains('For God so loved'));
-    });
-  });
-}
-```
-
-### Test Coverage Goals
-
-- Aim for >80% line coverage
-- 100% coverage for critical paths (data layer, business logic)
-- All new features must include tests
-
 ## Pull Request Process
 
 ### Before Submitting
@@ -228,14 +152,12 @@ void main() {
 1. **Run the full test suite:**
    ```bash
    flutter analyze
-   flutter test --coverage
    dart format --set-exit-if-changed .
    ```
 
 2. **Update documentation** if needed:
    - README.md for user-facing changes
    - Code comments for API changes
-   - CHANGELOG.md for notable changes
 
 3. **Self-review your changes:**
    - Check for debug prints, commented code
@@ -245,17 +167,16 @@ void main() {
 ### Creating the Pull Request
 
 1. Push your branch to your fork
-2. Open a PR against `upstream/develop` (or `main` for hotfixes)
+2. Open a PR against `upstream/main`
 3. Fill out the PR template completely
 4. Link related issues: `Fixes #123` or `Relates to #123`
 5. Request review from maintainers
 
 ### PR Requirements
 
-- [ ] All CI checks pass (analyze, test, build)
+- [ ] All CI checks pass (analyze, build)
 - [ ] Code formatted (`dart format .`)
 - [ ] No new analyzer warnings
-- [ ] Tests added/updated for changes
 - [ ] Documentation updated
 - [ ] Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/)
 - [ ] PR description explains the "why" and "what"
@@ -269,60 +190,13 @@ void main() {
 
 ### Merge Strategy
 
-- Feature/fix branches: **Squash and merge** (clean history)
-- Release branches: **Merge commit** (preserve history)
-- Hotfix branches: **Merge commit** to both `main` and `develop`
-
-## Release Process
-
-### Versioning
-
-We follow [Semantic Versioning](https://semver.org/):
-
-- **MAJOR** - Breaking changes
-- **MINOR** - New features (backward compatible)
-- **PATCH** - Bug fixes (backward compatible)
-
-### Creating a Release
-
-1. Create release branch:
-   ```bash
-   git checkout develop
-   git pull upstream develop
-   git checkout -b release/v1.2.0
-   ```
-
-2. Update version in `pubspec.yaml`:
-   ```yaml
-   version: 1.2.0+12
-   ```
-
-3. Update CHANGELOG.md with release notes
-
-4. Create PR to `main` (not `develop`)
-
-5. After merge, tag the release:
-   ```bash
-   git checkout main
-   git pull upstream main
-   git tag -a v1.2.0 -m "Release v1.2.0"
-   git push upstream v1.2.0
-   ```
-
-6. Merge back to `develop`:
-   ```bash
-   git checkout develop
-   git merge main
-   git push upstream develop
-   ```
-
-7. GitHub Actions will build and publish artifacts
+- Feature/fix/hotfix branches: **Squash and merge** (clean history)
 
 ## Getting Help
 
-- Check existing [issues](https://github.com/your-username/read-your-bible/issues)
-- Read the [documentation](https://github.com/your-username/read-your-bible/wiki)
-- Ask in [Discussions](https://github.com/your-username/read-your-bible/discussions)
+- Check existing [issues](https://github.com/AdamJCavanaugh/read-your-bible/issues)
+- Read the [documentation](https://github.com/AdamJCavanaugh/read-your-bible/wiki)
+- Ask in [Discussions](https://github.com/AdamJCavanaugh/read-your-bible/discussions)
 - Contact maintainers via email
 
 ## Recognition

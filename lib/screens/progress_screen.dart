@@ -12,9 +12,7 @@ class ProgressScreen extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Your Progress'),
-      ),
+      appBar: AppBar(title: const Text('Your Progress')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -130,9 +128,7 @@ class ProgressScreen extends StatelessWidget {
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(20),
-                child: WeeklyChart(
-                  weeklyMinutes: state.weeklyMinutes,
-                ),
+                child: WeeklyChart(weeklyMinutes: state.weeklyMinutes),
               ),
             ),
 
@@ -315,16 +311,10 @@ class ProgressScreen extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
+            Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
             Text(
               '${(percentage * 100).toInt()}%',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
+              style: TextStyle(fontWeight: FontWeight.bold, color: color),
             ),
           ],
         ),

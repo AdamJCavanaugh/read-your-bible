@@ -8,7 +8,7 @@ A mobile-first offline Bible reading application with deep customization of Bibl
 - **Customizable Reading Plans** - Create personalized reading schedules
 - **Progress Tracking** - Visual progress indicators and statistics
 - **Multiple Translations** - Support for multiple Bible translations (KJV, BSB, WEB)
-- **Cross-platform** - iOS, Android, Web, Windows, macOS, Linux
+- **Cross-platform** - Currently Android only; iOS, Web, Windows, macOS, Linux planned
 
 ## Getting Started
 
@@ -18,17 +18,17 @@ A mobile-first offline Bible reading application with deep customization of Bibl
 - Dart SDK 3.3.0 or higher
 - Platform-specific requirements:
   - **Android**: Android Studio, JDK 17+
-  - **iOS**: Xcode 15+ (macOS only)
-  - **Web**: Chrome/Edge
-  - **Windows**: Visual Studio 2022 with Desktop development with C++ workload
-  - **macOS**: Xcode 15+
-  - **Linux**: clang, cmake, ninja-build, pkg-config, libgtk-3-dev, liblzma-dev
+  - **iOS**: Xcode 15+ (macOS only) - *planned*
+  - **Web**: Chrome/Edge - *planned*
+  - **Windows**: Visual Studio 2022 with Desktop development with C++ workload - *planned*
+  - **macOS**: Xcode 15+ - *planned*
+  - **Linux**: clang, cmake, ninja-build, pkg-config, libgtk-3-dev, liblzma-dev - *planned*
 
 ### Installation
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/read-your-bible.git
+   git clone https://github.com/AdamJCavanaugh/read-your-bible.git
    cd read-your-bible
    ```
 
@@ -42,10 +42,10 @@ A mobile-first offline Bible reading application with deep customization of Bibl
    # Mobile/Desktop
    flutter run
    
-   # Web
+   # Web (planned)
    flutter run -d chrome
    
-   # Specific platform
+   # Specific platform (planned)
    flutter run -d android
    flutter run -d ios
    flutter run -d windows
@@ -60,13 +60,13 @@ A mobile-first offline Bible reading application with deep customization of Bibl
 flutter build apk --release
 flutter build appbundle --release
 
-# iOS
+# iOS (planned)
 flutter build ios --release
 
-# Web
+# Web (planned)
 flutter build web --release
 
-# Desktop
+# Desktop (planned)
 flutter build windows --release
 flutter build macos --release
 flutter build linux --release
@@ -135,39 +135,22 @@ python build_sqlite_bibles.py
 
 ## Contributing
 
-### Branching Strategy
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
-- `main` - Production-ready code, tagged releases
-- `develop` - Integration branch for features
-- `feature/*` - Feature branches from `develop`
-- `fix/*` - Bug fix branches from `develop` or `main`
-- `release/*` - Release preparation branches from `develop`
+### Quick Start
 
-### Development Workflow
-
-1. Create a feature branch from `develop`:
-   ```bash
-   git checkout develop
-   git pull origin develop
-   git checkout -b feature/your-feature-name
-   ```
-
-2. Make your changes, following the code style guidelines
-
-3. Run tests and analysis:
-   ```bash
-   flutter analyze
-   flutter test
-   ```
-
-4. Push and create a Pull Request to `develop`
+1. Fork and clone the repository
+2. Create a feature branch from `main`: `git checkout -b feature/your-feature`
+3. Make your changes following the code style guidelines
+4. Run analysis: `flutter analyze`
+5. Push and create a Pull Request to `main`
 
 ### Code Style
 
 - Follow [Effective Dart](https://dart.dev/guides/language/effective-dart) guidelines
 - Use `flutter analyze` for static analysis
 - Format code with `dart format .`
-- Write tests for new features
+- Follow Material Design 3 guidelines for UI
 
 ### Commit Messages
 
@@ -193,24 +176,12 @@ over the past 7 days with interactive tooltips.
 Closes #42
 ```
 
-## Testing
-
-```bash
-# Run all tests
-flutter test
-
-# Run with coverage
-flutter test --coverage
-
-# Run specific test file
-flutter test test/widget_test.dart
-```
-
 ## CI/CD
 
 GitHub Actions workflows are configured in `.github/workflows/`:
 
-- **CI** (`ci.yml`) - Runs on every push/PR: analyze, test, build all platforms
+- **CI** (`ci.yml`) - Runs on every push/PR: analyze, build all platforms
+- **Release** (`release.yml`) - Triggered on version tags: builds and publishes all platform artifacts
 - **Dependabot** (`dependabot.yml`) - Weekly dependency updates
 
 ## License

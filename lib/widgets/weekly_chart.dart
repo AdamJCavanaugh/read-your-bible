@@ -14,7 +14,9 @@ class WeeklyChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    final maxMinutes = (weeklyMinutes.reduce((a, b) => a > b ? a : b)).clamp(25, 60);
+    final maxMinutes = (weeklyMinutes.reduce(
+      (a, b) => a > b ? a : b,
+    )).clamp(25, 60);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,7 +33,9 @@ class WeeklyChart extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
+                color: theme.colorScheme.primaryContainer.withValues(
+                  alpha: 0.5,
+                ),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
@@ -52,7 +56,9 @@ class WeeklyChart extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: List.generate(7, (index) {
-              final minutes = index < weeklyMinutes.length ? weeklyMinutes[index] : 0;
+              final minutes = index < weeklyMinutes.length
+                  ? weeklyMinutes[index]
+                  : 0;
               final isToday = index == 6; // Sunday/Today in mock
               final meetsGoal = minutes >= dailyGoalMinutes;
               final heightPercent = (minutes / maxMinutes).clamp(0.08, 1.0);
@@ -88,8 +94,10 @@ class WeeklyChart extends StatelessWidget {
                           : null,
                       color: !isToday
                           ? (meetsGoal
-                              ? theme.colorScheme.primary.withValues(alpha: 0.7)
-                              : theme.colorScheme.surfaceContainerHigh)
+                                ? theme.colorScheme.primary.withValues(
+                                    alpha: 0.7,
+                                  )
+                                : theme.colorScheme.surfaceContainerHigh)
                           : null,
                       borderRadius: BorderRadius.circular(8),
                       border: isToday
@@ -101,7 +109,9 @@ class WeeklyChart extends StatelessWidget {
                       boxShadow: isToday
                           ? [
                               BoxShadow(
-                                color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                                color: theme.colorScheme.primary.withValues(
+                                  alpha: 0.3,
+                                ),
                                 blurRadius: 6,
                                 offset: const Offset(0, 3),
                               ),
