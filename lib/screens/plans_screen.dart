@@ -14,6 +14,7 @@ class PlansScreen extends StatefulWidget {
 
 class _PlansScreenState extends State<PlansScreen> {
   bool _showCompletedPlans = false;
+  bool _showDefaultPlans = true;
 
   void _showPlanDetailsModal(
     BuildContext context,
@@ -266,27 +267,46 @@ class _PlansScreenState extends State<PlansScreen> {
       const SizedBox(height: 16),
     ];
 
-    // Default Plans Section
+    // Default Plans Section (Collapsible)
     if (defaultPlans.isNotEmpty) {
       children.addAll([
-        Text(
-          'Default Plans',
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Default Plans',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  _showDefaultPlans = !_showDefaultPlans;
+                });
+              },
+              icon: Icon(
+                _showDefaultPlans ? Icons.expand_less : Icons.expand_more,
+              ),
+              tooltip: _showDefaultPlans ? 'Collapse' : 'Expand',
+            ),
+          ],
         ),
         const SizedBox(height: 12),
-        ...defaultPlans.map((plan) {
-          return PlanCard(
-            plan: plan,
-            isActive: false,
-            isDefault: true,
-            onTap: () => _showPlanDetailsModal(context, plan, state),
-            onActivate: () => _activatePlan(context, state, plan),
-          );
-        }),
-        const SizedBox(height: 24),
       ]);
+
+      if (_showDefaultPlans) {
+        children.addAll([
+          ...defaultPlans.map((plan) {
+            return _DefaultPlanTile(
+              plan: plan,
+              onSelect: () =>
+                  _showDefaultPlanCustomization(context, state, plan),
+            );
+          }),
+          const SizedBox(height: 24),
+        ]);
+      }
     }
 
     // Create Custom Plan Hero Card
@@ -504,13 +524,263 @@ class _PlansScreenState extends State<PlansScreen> {
     );
   }
 
-  void _activatePlan(BuildContext context, AppState state, ReadingPlan plan) {
-    state.setActivePlan(plan);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('"${plan.title}" activated as your current plan!'),
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 2),
+  void _showDefaultPlanCustomization(
+    BuildContext context,
+    AppState state,
+    ReadingPlan defaultPlan,
+  ) {
+    final titleController = TextEditingController(text: defaultPlan.title);
+    final durationController = TextEditingController(
+      text: '${defaultPlan.durationDays}',
+    );
+    int durationDays = defaultPlan.durationDays;
+    final description = defaultPlan.description;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) {
+        final theme = Theme.of(context);
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+                left: 20,
+                right: 20,
+                top: 20,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.outlineVariant,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Customize ${defaultPlan.title}',
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    defaultPlan.subtitle,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: titleController,
+                    decoration: InputDecoration(
+                      labelText: 'Plan Name',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      filled: true,
+                      prefixIcon: const Icon(Icons.edit_note),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: durationController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'Duration (days)',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      filled: true,
+                      prefixIcon: const Icon(Icons.calendar_today),
+                    ),
+                    onChanged: (value) {
+                      final parsed = int.tryParse(value);
+                      if (parsed != null && parsed > 0) {
+                        setModalState(() {
+                          durationDays = parsed;
+                        });
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton.icon(
+                      onPressed: () {
+                        final title = titleController.text.trim();
+                        final newPlan = createCustomReadingPlan(
+                          title: title.isEmpty ? defaultPlan.title : title,
+                          durationDays: durationDays,
+                          selectedBooks: defaultPlan.readings
+                              .expand((r) => r.passages.map((p) => p.book))
+                              .toSet()
+                              .toList(),
+                          repeatCount: 1,
+                          description: description,
+                          startDate: DateTime.now(),
+                        );
+
+                        state.addCustomPlan(newPlan, setAsActive: true);
+                        Navigator.pop(ctx);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              '🎉 "${newPlan.title}" created and set as active!',
+                            ),
+                            behavior: SnackBarBehavior.floating,
+                            duration: const Duration(seconds: 3),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.add_task),
+                      label: const Text(
+                        'Create & Start Plan',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _DefaultPlanTile extends StatelessWidget {
+  final ReadingPlan plan;
+  final VoidCallback onSelect;
+
+  const _DefaultPlanTile({required this.plan, required this.onSelect});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(
+          color: theme.colorScheme.secondary.withValues(alpha: 0.3),
+          width: 1.5,
+        ),
+      ),
+      color: theme.colorScheme.secondaryContainer.withValues(alpha: 0.1),
+      child: InkWell(
+        onTap: onSelect,
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.secondaryContainer,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.menu_book,
+                  color: theme.colorScheme.onSecondaryContainer,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.secondaryContainer,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.star,
+                                size: 12,
+                                color: theme.colorScheme.onSecondaryContainer,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                'Default Plan',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  color: theme.colorScheme.onSecondaryContainer,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      plan.title,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      plan.subtitle,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      plan.description,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant.withValues(
+                          alpha: 0.8,
+                        ),
+                        height: 1.4,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              Icon(
+                Icons.chevron_right,
+                color: theme.colorScheme.onSurfaceVariant,
+                size: 24,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
