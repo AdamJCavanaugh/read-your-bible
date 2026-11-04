@@ -139,7 +139,7 @@ class AppState extends ChangeNotifier {
             'Read through the entire Bible in alphabetical order (Acts → Zephaniah). '
             'Numbered books sort naturally by their full name (1 Chronicles, 1 Corinthians, etc.).',
         startDate: DateTime.now(),
-      );
+      ).copyWith(category: 'Default');
 
       // Create Chronological Plan
       final chronologicalPlan = createCustomReadingPlan(
@@ -152,7 +152,7 @@ class AppState extends ChangeNotifier {
             '(Genesis → Job → Exodus → ... → Revelation). '
             'Based on the timeline of biblical events.',
         startDate: DateTime.now(),
-      );
+      ).copyWith(category: 'Default');
 
       // Add to plans list
       _allPlans.addAll([alphabeticalPlan, chronologicalPlan]);
