@@ -241,6 +241,235 @@ class _PlansScreenState extends State<PlansScreen> {
         .where((p) => state.isPlanFullyCompleted(p.id))
         .toList();
 
+    // Default plans (pre-created)
+    final defaultPlans = state.allPlans
+        .where((p) => p.category == 'Default')
+        .toList();
+
+    final List<Widget> children = [
+      Text(
+        'YOUR PLANS',
+        style: theme.textTheme.labelMedium?.copyWith(
+          letterSpacing: 1.2,
+          fontWeight: FontWeight.bold,
+          color: theme.colorScheme.primary,
+        ),
+      ),
+      const SizedBox(height: 4),
+      Text(
+        'Manage Your Reading Journeys',
+        style: theme.textTheme.headlineMedium?.copyWith(
+          fontWeight: FontWeight.w800,
+          letterSpacing: -0.5,
+        ),
+      ),
+      const SizedBox(height: 16),
+    ];
+
+    // Default Plans Section
+    if (defaultPlans.isNotEmpty) {
+      children.addAll([
+        Text(
+          'Default Plans',
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 12),
+        ...defaultPlans.map((plan) {
+          return PlanCard(
+            plan: plan,
+            isActive: false,
+            isDefault: true,
+            onTap: () => _showPlanDetailsModal(context, plan, state),
+            onActivate: () => _activatePlan(context, state, plan),
+          );
+        }),
+        const SizedBox(height: 24),
+      ]);
+    }
+
+    // Create Custom Plan Hero Card
+    children.addAll([
+      Card(
+        color: theme.colorScheme.primary,
+        child: Padding(
+          padding: const EdgeInsets.all(18),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.2),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.auto_awesome,
+                      color: Colors.white,
+                      size: 24,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  const Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Create Custom Reading Plan',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 2),
+                        Text(
+                          'Choose custom duration, books & repeat cycles',
+                          style: TextStyle(fontSize: 12, color: Colors.white70),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 14),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: theme.colorScheme.primary,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const CreatePlanScreen(),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    'Build Your Plan',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      const SizedBox(height: 24),
+    ]);
+
+    // Active Plans Section
+    if (activePlans.isNotEmpty) {
+      children.addAll([
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Active Plans (${activePlans.length})',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        ...activePlans.map((plan) {
+          return PlanCard(
+            plan: plan,
+            isActive: false,
+            onTap: () => _showPlanDetailsModal(context, plan, state),
+            onActivate: null,
+          );
+        }),
+        const SizedBox(height: 24),
+      ]);
+    }
+
+    // Completed Plans Section (Collapsible)
+    if (completedPlans.isNotEmpty) {
+      children.addAll([
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Completed Plans (${completedPlans.length})',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  _showCompletedPlans = !_showCompletedPlans;
+                });
+              },
+              icon: Icon(
+                _showCompletedPlans ? Icons.expand_less : Icons.expand_more,
+              ),
+              tooltip: _showCompletedPlans ? 'Collapse' : 'Expand',
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+      ]);
+
+      if (_showCompletedPlans) {
+        children.addAll([
+          ...completedPlans.map((plan) {
+            return PlanCard(
+              plan: plan,
+              isActive: false,
+              isCompleted: true,
+              onTap: () => _showPlanDetailsModal(context, plan, state),
+              onActivate: null,
+            );
+          }),
+          const SizedBox(height: 24),
+        ]);
+      }
+    }
+
+    // Empty State
+    if (state.allPlans.isEmpty) {
+      children.add(
+        Card(
+          color: theme.colorScheme.surfaceContainerHigh,
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Center(
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.menu_book_outlined,
+                    size: 40,
+                    color: theme.colorScheme.primary,
+                  ),
+                  const SizedBox(height: 12),
+                  const Text(
+                    'No Plans Yet',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 4),
+                  const Text(
+                    'Tap "Build Your Plan" above to create your first customized reading plan!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 13, color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    children.add(const SizedBox(height: 60));
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Reading Plans'),
@@ -269,203 +498,19 @@ class _PlansScreenState extends State<PlansScreen> {
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'YOUR PLANS',
-              style: theme.textTheme.labelMedium?.copyWith(
-                letterSpacing: 1.2,
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.primary,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              'Manage Your Reading Journeys',
-              style: theme.textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.w800,
-                letterSpacing: -0.5,
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Create Custom Plan Hero Card
-            Card(
-              color: theme.colorScheme.primary,
-              child: Padding(
-                padding: const EdgeInsets.all(18),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.2),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.auto_awesome,
-                            color: Colors.white,
-                            size: 24,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        const Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Create Custom Reading Plan',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              SizedBox(height: 2),
-                              Text(
-                                'Choose custom duration, books & repeat cycles',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.white70,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 14),
-                    SizedBox(
-                      width: double.infinity,
-                      child: FilledButton(
-                        style: FilledButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: theme.colorScheme.primary,
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => const CreatePlanScreen(),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          'Build Your Plan',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            // Active Plans Section
-            if (activePlans.isNotEmpty) ...[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Active Plans (${activePlans.length})',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              ...activePlans.map((plan) {
-                return PlanCard(
-                  plan: plan,
-                  isActive: false,
-                  onTap: () => _showPlanDetailsModal(context, plan, state),
-                  onActivate: null,
-                );
-              }),
-              const SizedBox(height: 24),
-            ],
-
-            // Completed Plans Section (Collapsible)
-            if (completedPlans.isNotEmpty) ...[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Completed Plans (${completedPlans.length})',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _showCompletedPlans = !_showCompletedPlans;
-                      });
-                    },
-                    icon: Icon(
-                      _showCompletedPlans
-                          ? Icons.expand_less
-                          : Icons.expand_more,
-                    ),
-                    tooltip: _showCompletedPlans ? 'Collapse' : 'Expand',
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              if (_showCompletedPlans)
-                ...completedPlans.map((plan) {
-                  return PlanCard(
-                    plan: plan,
-                    isActive: false,
-                    isCompleted: true,
-                    onTap: () => _showPlanDetailsModal(context, plan, state),
-                    onActivate: null,
-                  );
-                }),
-              const SizedBox(height: 24),
-            ],
-
-            // Empty State
-            if (state.allPlans.isEmpty)
-              Card(
-                color: theme.colorScheme.surfaceContainerHigh,
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Center(
-                    child: Column(
-                      children: [
-                        Icon(
-                          Icons.menu_book_outlined,
-                          size: 40,
-                          color: theme.colorScheme.primary,
-                        ),
-                        const SizedBox(height: 12),
-                        const Text(
-                          'No Plans Yet',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        const Text(
-                          'Tap "Build Your Plan" above to create your first customized reading plan!',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 13, color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-
-            const SizedBox(height: 60),
-          ],
+          children: children,
         ),
+      ),
+    );
+  }
+
+  void _activatePlan(BuildContext context, AppState state, ReadingPlan plan) {
+    state.setActivePlan(plan);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('"${plan.title}" activated as your current plan!'),
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
       ),
     );
   }
