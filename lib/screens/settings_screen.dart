@@ -24,18 +24,16 @@ class SettingsScreen extends StatelessWidget {
     final translationFullName = state.selectedTranslation == 'KJV'
         ? 'King James Version'
         : (state.selectedTranslation == 'WEB'
-            ? 'World English Bible'
-            : (state.selectedTranslation == 'BSB'
-                ? 'Berean Standard Bible'
-                : state.selectedTranslation));
+              ? 'World English Bible'
+              : (state.selectedTranslation == 'BSB'
+                    ? 'Berean Standard Bible'
+                    : state.selectedTranslation));
 
     final isWebInstalled = state.isTranslationInstalled('WEB');
     final isBSBInstalled = state.isTranslationInstalled('BSB');
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
+      appBar: AppBar(title: const Text('Settings')),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
@@ -108,9 +106,14 @@ class SettingsScreen extends StatelessWidget {
             child: Column(
               children: [
                 ListTile(
-                  leading: Icon(Icons.menu_book, color: theme.colorScheme.primary),
+                  leading: Icon(
+                    Icons.menu_book,
+                    color: theme.colorScheme.primary,
+                  ),
                   title: const Text('Bible Translation'),
-                  subtitle: Text('Current: ${state.selectedTranslation} ($translationFullName)'),
+                  subtitle: Text(
+                    'Current: ${state.selectedTranslation} ($translationFullName)',
+                  ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 14),
                   onTap: () {
                     _showTranslationPicker(context, state);
@@ -118,9 +121,14 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 const Divider(height: 1, indent: 16, endIndent: 16),
                 ListTile(
-                  leading: Icon(Icons.text_fields, color: theme.colorScheme.primary),
+                  leading: Icon(
+                    Icons.text_fields,
+                    color: theme.colorScheme.primary,
+                  ),
                   title: const Text('Scripture Text Size & Style'),
-                  subtitle: Text('${state.fontSize.toInt()} pt (${state.isSerifFont ? 'Serif' : 'Sans-serif'})'),
+                  subtitle: Text(
+                    '${state.fontSize.toInt()} pt (${state.isSerifFont ? 'Serif' : 'Sans-serif'})',
+                  ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 14),
                   onTap: () {
                     _showFontSizeModal(context, state);
@@ -128,9 +136,14 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 const Divider(height: 1, indent: 16, endIndent: 16),
                 SwitchListTile(
-                  secondary: Icon(Icons.view_agenda_outlined, color: theme.colorScheme.primary),
+                  secondary: Icon(
+                    Icons.view_agenda_outlined,
+                    color: theme.colorScheme.primary,
+                  ),
                   title: const Text('Combine Plans on Today View'),
-                  subtitle: const Text('Merge daily portions from all active plans into a single card'),
+                  subtitle: const Text(
+                    'Merge daily portions from all active plans into a single card',
+                  ),
                   value: state.combinePlansOnToday,
                   onChanged: (val) {
                     state.setCombinePlansOnToday(val);
@@ -209,7 +222,9 @@ class SettingsScreen extends StatelessWidget {
                 ListTile(
                   leading: Icon(Icons.book, color: theme.colorScheme.primary),
                   title: const Text('KJV - King James Version'),
-                  subtitle: Text('Bundled with app (${scriptureService.getFileSizeDisplay('KJV')}) • Always available offline'),
+                  subtitle: Text(
+                    'Bundled with app (${scriptureService.getFileSizeDisplay('KJV')}) • Always available offline',
+                  ),
                   trailing: Chip(
                     label: const Text('Installed'),
                     backgroundColor: theme.colorScheme.primaryContainer,
@@ -225,23 +240,34 @@ class SettingsScreen extends StatelessWidget {
 
                 // WEB - Downloadable
                 _buildTranslationTile(
-                  context, state, 'WEB', 'World English Bible',
-                  'Modern Public Domain English (${scriptureService.getFileSizeDisplay('WEB')})', isWebInstalled,
+                  context,
+                  state,
+                  'WEB',
+                  'World English Bible',
+                  'Modern Public Domain English (${scriptureService.getFileSizeDisplay('WEB')})',
+                  isWebInstalled,
                 ),
 
                 const Divider(height: 1, indent: 16, endIndent: 16),
 
                 // BSB - Downloadable
                 _buildTranslationTile(
-                  context, state, 'BSB', 'Berean Standard Bible',
-                  'Modern Public Domain English (${scriptureService.getFileSizeDisplay('BSB')})', isBSBInstalled,
+                  context,
+                  state,
+                  'BSB',
+                  'Berean Standard Bible',
+                  'Modern Public Domain English (${scriptureService.getFileSizeDisplay('BSB')})',
+                  isBSBInstalled,
                 ),
 
                 const Divider(height: 1, indent: 16, endIndent: 16),
 
                 // Info
                 ListTile(
-                  leading: Icon(Icons.info_outline, color: theme.colorScheme.primary),
+                  leading: Icon(
+                    Icons.info_outline,
+                    color: theme.colorScheme.primary,
+                  ),
                   title: const Text('About Translations'),
                   subtitle: const Text(
                     'KJV is bundled by default. WEB and BSB are modern public domain translations '
@@ -268,15 +294,25 @@ class SettingsScreen extends StatelessWidget {
             child: Column(
               children: [
                 ListTile(
-                  leading: Icon(Icons.info_outline, color: theme.colorScheme.primary),
+                  leading: Icon(
+                    Icons.info_outline,
+                    color: theme.colorScheme.primary,
+                  ),
                   title: const Text('Read Your Bible'),
-                  subtitle: const Text('Version 1.0.0 • Mobile-first Offline Bible App'),
+                  subtitle: const Text(
+                    'Version 1.0.0 • Mobile-first Offline Bible App',
+                  ),
                 ),
                 const Divider(height: 1, indent: 16, endIndent: 16),
                 ListTile(
-                  leading: Icon(Icons.privacy_tip_outlined, color: theme.colorScheme.primary),
+                  leading: Icon(
+                    Icons.privacy_tip_outlined,
+                    color: theme.colorScheme.primary,
+                  ),
                   title: const Text('Privacy & Offline First'),
-                  subtitle: const Text('No account required. All scripture and plan data stays local on your device.'),
+                  subtitle: const Text(
+                    'No account required. All scripture and plan data stays local on your device.',
+                  ),
                 ),
               ],
             ),
@@ -287,14 +323,27 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTranslationTile(BuildContext context, AppState state, String code, String name, String description, bool isInstalled) {
+  Widget _buildTranslationTile(
+    BuildContext context,
+    AppState state,
+    String code,
+    String name,
+    String description,
+    bool isInstalled,
+  ) {
     if (isInstalled) {
       return ListTile(
-        leading: Icon(Icons.download_done, color: Theme.of(context).colorScheme.primary),
+        leading: Icon(
+          Icons.download_done,
+          color: Theme.of(context).colorScheme.primary,
+        ),
         title: Text('$code - $name'),
         subtitle: Text('Downloaded • Downloaded from GitHub'),
         trailing: IconButton(
-          icon: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.error),
+          icon: Icon(
+            Icons.delete_outline,
+            color: Theme.of(context).colorScheme.error,
+          ),
           tooltip: 'Delete $code Translation',
           onPressed: () {
             _confirmDeleteTranslation(context, state, code);
@@ -309,7 +358,10 @@ class SettingsScreen extends StatelessWidget {
           final progress = state.getTranslationDownloadProgress(code);
 
           return ListTile(
-            leading: Icon(Icons.download_for_offline, color: Theme.of(context).colorScheme.primary),
+            leading: Icon(
+              Icons.download_for_offline,
+              color: Theme.of(context).colorScheme.primary,
+            ),
             title: Text('$code - $name'),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -321,7 +373,10 @@ class SettingsScreen extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     'Downloading... ${(progress * 100).toInt()}%',
-                    style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.primary),
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                   ),
                 ],
               ],
@@ -344,7 +399,11 @@ class SettingsScreen extends StatelessWidget {
     }
   }
 
-  void _confirmDeleteTranslation(BuildContext context, AppState state, String translation) {
+  void _confirmDeleteTranslation(
+    BuildContext context,
+    AppState state,
+    String translation,
+  ) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -405,8 +464,8 @@ class SettingsScreen extends StatelessWidget {
                   Text(
                     'Select Primary Translation',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   RadioListTile<String>(
@@ -441,7 +500,9 @@ class SettingsScreen extends StatelessWidget {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Modern Public Domain English (${ScriptureService().getFileSizeDisplay('WEB')})'),
+                          Text(
+                            'Modern Public Domain English (${ScriptureService().getFileSizeDisplay('WEB')})',
+                          ),
                           if (isWebDownloading) ...[
                             const SizedBox(height: 4),
                             LinearProgressIndicator(value: webProgress),
@@ -478,7 +539,9 @@ class SettingsScreen extends StatelessWidget {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Modern Public Domain English (${ScriptureService().getFileSizeDisplay('BSB')})'),
+                          Text(
+                            'Modern Public Domain English (${ScriptureService().getFileSizeDisplay('BSB')})',
+                          ),
                           if (isBSBDownloading) ...[
                             const SizedBox(height: 4),
                             LinearProgressIndicator(value: bsbProgress),

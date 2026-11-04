@@ -21,8 +21,10 @@ class ScriptureService {
   // GitHub Release download URLs
   // Updated for: https://github.com/AdamJCavanaugh/read-your-bible/releases/tag/bibles-v1.0.0
   static const Map<String, String> _downloadUrls = {
-    'WEB': 'https://github.com/AdamJCavanaugh/read-your-bible/releases/download/bibles-v1.0.0/web.db',
-    'BSB': 'https://github.com/AdamJCavanaugh/read-your-bible/releases/download/bibles-v1.0.0/bsb.db',
+    'WEB':
+        'https://github.com/AdamJCavanaugh/read-your-bible/releases/download/bibles-v1.0.0/web.db',
+    'BSB':
+        'https://github.com/AdamJCavanaugh/read-your-bible/releases/download/bibles-v1.0.0/bsb.db',
   };
 
   // Expected SHA-256 checksums for integrity verification
@@ -38,27 +40,83 @@ class ScriptureService {
   };
 
   static const Map<String, int> bookNameToNum = {
-    'Genesis': 1, 'Exodus': 2, 'Leviticus': 3, 'Numbers': 4, 'Deuteronomy': 5,
-    'Joshua': 6, 'Judges': 7, 'Ruth': 8, '1 Samuel': 9, '2 Samuel': 10,
-    '1 Kings': 11, '2 Kings': 12, '1 Chronicles': 13, '2 Chronicles': 14,
-    'Ezra': 15, 'Nehemiah': 16, 'Esther': 17, 'Job': 18, 'Psalms': 19, 'Psalm': 19,
-    'Proverbs': 20, 'Ecclesiastes': 21, 'Song of Solomon': 22, 'Isaiah': 23,
-    'Jeremiah': 24, 'Lamentations': 25, 'Ezekiel': 26, 'Daniel': 27, 'Hosea': 28,
-    'Joel': 29, 'Amos': 30, 'Obadiah': 31, 'Jonah': 32, 'Micah': 33, 'Nahum': 34,
-    'Habakkuk': 35, 'Zephaniah': 36, 'Haggai': 37, 'Zechariah': 38, 'Malachi': 39,
-    'Matthew': 40, 'Mark': 41, 'Luke': 42, 'John': 43, 'Acts': 44, 'Romans': 45,
-    '1 Corinthians': 46, '2 Corinthians': 47, 'Galatians': 48, 'Ephesians': 49,
-    'Philippians': 50, 'Colossians': 51, '1 Thessalonians': 52, '2 Thessalonians': 53,
-    '1 Timothy': 54, '2 Timothy': 55, 'Titus': 56, 'Philemon': 57, 'Hebrews': 58,
-    'James': 59, '1 Peter': 60, '2 Peter': 61, '1 John': 62, '2 John': 63, '3 John': 64,
-    'Jude': 65, 'Revelation': 66
+    'Genesis': 1,
+    'Exodus': 2,
+    'Leviticus': 3,
+    'Numbers': 4,
+    'Deuteronomy': 5,
+    'Joshua': 6,
+    'Judges': 7,
+    'Ruth': 8,
+    '1 Samuel': 9,
+    '2 Samuel': 10,
+    '1 Kings': 11,
+    '2 Kings': 12,
+    '1 Chronicles': 13,
+    '2 Chronicles': 14,
+    'Ezra': 15,
+    'Nehemiah': 16,
+    'Esther': 17,
+    'Job': 18,
+    'Psalms': 19,
+    'Psalm': 19,
+    'Proverbs': 20,
+    'Ecclesiastes': 21,
+    'Song of Solomon': 22,
+    'Isaiah': 23,
+    'Jeremiah': 24,
+    'Lamentations': 25,
+    'Ezekiel': 26,
+    'Daniel': 27,
+    'Hosea': 28,
+    'Joel': 29,
+    'Amos': 30,
+    'Obadiah': 31,
+    'Jonah': 32,
+    'Micah': 33,
+    'Nahum': 34,
+    'Habakkuk': 35,
+    'Zephaniah': 36,
+    'Haggai': 37,
+    'Zechariah': 38,
+    'Malachi': 39,
+    'Matthew': 40,
+    'Mark': 41,
+    'Luke': 42,
+    'John': 43,
+    'Acts': 44,
+    'Romans': 45,
+    '1 Corinthians': 46,
+    '2 Corinthians': 47,
+    'Galatians': 48,
+    'Ephesians': 49,
+    'Philippians': 50,
+    'Colossians': 51,
+    '1 Thessalonians': 52,
+    '2 Thessalonians': 53,
+    '1 Timothy': 54,
+    '2 Timothy': 55,
+    'Titus': 56,
+    'Philemon': 57,
+    'Hebrews': 58,
+    'James': 59,
+    '1 Peter': 60,
+    '2 Peter': 61,
+    '1 John': 62,
+    '2 John': 63,
+    '3 John': 64,
+    'Jude': 65,
+    'Revelation': 66,
   };
 
-  Set<String> get installedTranslations => Set.unmodifiable(_installedTranslations);
+  Set<String> get installedTranslations =>
+      Set.unmodifiable(_installedTranslations);
 
-  bool isInstalled(String translation) => _installedTranslations.contains(translation);
+  bool isInstalled(String translation) =>
+      _installedTranslations.contains(translation);
 
-  double getDownloadProgress(String translation) => _downloadProgress[translation] ?? 0.0;
+  double getDownloadProgress(String translation) =>
+      _downloadProgress[translation] ?? 0.0;
 
   bool isDownloading(String translation) {
     final prog = _downloadProgress[translation];
@@ -98,8 +156,13 @@ class ScriptureService {
 
       if (!await dbFile.exists() || await dbFile.length() < 1000) {
         try {
-          final byteData = await rootBundle.load('assets/bible/${translation.toLowerCase()}.db');
-          final bytes = byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes);
+          final byteData = await rootBundle.load(
+            'assets/bible/${translation.toLowerCase()}.db',
+          );
+          final bytes = byteData.buffer.asUint8List(
+            byteData.offsetInBytes,
+            byteData.lengthInBytes,
+          );
           await dbFile.writeAsBytes(bytes, flush: true);
         } catch (e) {
           debugPrint('Error writing $translation DB asset to disk: $e');
@@ -122,13 +185,16 @@ class ScriptureService {
     if (db == null) return;
 
     try {
-      final results = await db.rawQuery('''
+      final results = await db.rawQuery(
+        '''
         SELECT book_number, chapter, MAX(verse) as verse_count
         FROM verses
         WHERE translation = ?
         GROUP BY book_number, chapter
         ORDER BY book_number, chapter
-      ''', [translation]);
+      ''',
+        [translation],
+      );
 
       final Map<int, Map<int, int>> bookChapterCounts = {};
       for (final row in results) {
@@ -148,7 +214,9 @@ class ScriptureService {
     String translation, {
     required void Function(double progress) onProgress,
   }) async {
-    if (_installedTranslations.contains(translation) && _databases.containsKey(translation)) return;
+    if (_installedTranslations.contains(translation) &&
+        _databases.containsKey(translation))
+      return;
     if (translation == 'KJV') return; // KJV is bundled
 
     final url = _downloadUrls[translation];
@@ -156,7 +224,9 @@ class ScriptureService {
     final expectedChecksum = _expectedChecksums[translation] ?? '';
 
     if (url == null || url.contains('<your-username>')) {
-      throw Exception('Download URL not configured for $translation. Please update _downloadUrls in scripture_service.dart');
+      throw Exception(
+        'Download URL not configured for $translation. Please update _downloadUrls in scripture_service.dart',
+      );
     }
 
     _downloadProgress[translation] = 0.0;
@@ -178,7 +248,9 @@ class ScriptureService {
       final response = await client.send(request);
 
       if (response.statusCode != 200) {
-        throw Exception('Failed to download $translation: HTTP ${response.statusCode}');
+        throw Exception(
+          'Failed to download $translation: HTTP ${response.statusCode}',
+        );
       }
 
       final contentLength = response.contentLength ?? expectedSize;
@@ -200,7 +272,9 @@ class ScriptureService {
       // Verify file size
       final actualSize = await dbFile.length();
       if (expectedSize > 0 && actualSize != expectedSize) {
-        debugPrint('Warning: $translation size mismatch. Expected: $expectedSize, Got: $actualSize');
+        debugPrint(
+          'Warning: $translation size mismatch. Expected: $expectedSize, Got: $actualSize',
+        );
       }
 
       // Verify checksum if provided
@@ -210,7 +284,9 @@ class ScriptureService {
         final actualChecksum = digest.toString();
         if (actualChecksum.toLowerCase() != expectedChecksum.toLowerCase()) {
           await dbFile.delete();
-          throw Exception('Checksum verification failed for $translation. File may be corrupted.');
+          throw Exception(
+            'Checksum verification failed for $translation. File may be corrupted.',
+          );
         }
       }
 
@@ -245,7 +321,11 @@ class ScriptureService {
   Future<void> _deleteDatabaseFile(String translation) async {
     try {
       final docDir = await getApplicationDocumentsDirectory();
-      final dbPath = join(docDir.path, 'read_your_bible_databases', '${translation.toLowerCase()}.db');
+      final dbPath = join(
+        docDir.path,
+        'read_your_bible_databases',
+        '${translation.toLowerCase()}.db',
+      );
       final dbFile = File(dbPath);
       if (await dbFile.exists()) {
         await dbFile.delete();
@@ -262,7 +342,9 @@ class ScriptureService {
     required String translation,
   }) async {
     final bookNum = bookNameToNum[book] ?? 1;
-    final activeTrans = _databases.containsKey(translation) ? translation : 'KJV';
+    final activeTrans = _databases.containsKey(translation)
+        ? translation
+        : 'KJV';
     final cacheKey = '$activeTrans:$bookNum:$chapter';
 
     if (_verseCache.containsKey(cacheKey)) {
@@ -304,7 +386,9 @@ class ScriptureService {
   }) {
     final chNum = int.tryParse(chapter) ?? 1;
     final bookNum = bookNameToNum[book] ?? 1;
-    final activeTrans = _databases.containsKey(translation) ? translation : 'KJV';
+    final activeTrans = _databases.containsKey(translation)
+        ? translation
+        : 'KJV';
     final cacheKey = '$activeTrans:$bookNum:$chNum';
 
     if (_verseCache.containsKey(cacheKey)) {
@@ -314,9 +398,7 @@ class ScriptureService {
     // Trigger async fetch to populate cache for subsequent builds
     fetchVersesAsync(book: book, chapter: chNum, translation: activeTrans);
 
-    return [
-      'Loading scripture passage...',
-    ];
+    return ['Loading scripture passage...'];
   }
 
   // Accurate verse count from pre-loaded database cache

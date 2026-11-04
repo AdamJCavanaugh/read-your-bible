@@ -155,16 +155,24 @@ class _ReadingViewScreenState extends State<ReadingViewScreen> {
                   RadioListTile<String>(
                     title: const Row(
                       children: [
-                        Text('KJV', style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(
+                          'KJV',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         SizedBox(width: 8),
                         Chip(
-                          label: Text('Bundled / Offline', style: TextStyle(fontSize: 10)),
+                          label: Text(
+                            'Bundled / Offline',
+                            style: TextStyle(fontSize: 10),
+                          ),
                           padding: EdgeInsets.zero,
                           visualDensity: VisualDensity.compact,
                         ),
                       ],
                     ),
-                    subtitle: const Text('King James Version (Classic Public Domain)'),
+                    subtitle: const Text(
+                      'King James Version (Classic Public Domain)',
+                    ),
                     value: 'KJV',
                     groupValue: state.selectedTranslation,
                     onChanged: (val) {
@@ -180,16 +188,24 @@ class _ReadingViewScreenState extends State<ReadingViewScreen> {
                     RadioListTile<String>(
                       title: const Row(
                         children: [
-                          Text('WEB', style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text(
+                            'WEB',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                           SizedBox(width: 8),
                           Chip(
-                            label: Text('Downloaded', style: TextStyle(fontSize: 10)),
+                            label: Text(
+                              'Downloaded',
+                              style: TextStyle(fontSize: 10),
+                            ),
                             padding: EdgeInsets.zero,
                             visualDensity: VisualDensity.compact,
                           ),
                         ],
                       ),
-                      subtitle: const Text('World English Bible (Modern Public Domain)'),
+                      subtitle: const Text(
+                        'World English Bible (Modern Public Domain)',
+                      ),
                       value: 'WEB',
                       groupValue: state.selectedTranslation,
                       onChanged: (val) {
@@ -239,16 +255,24 @@ class _ReadingViewScreenState extends State<ReadingViewScreen> {
                     RadioListTile<String>(
                       title: const Row(
                         children: [
-                          Text('BSB', style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text(
+                            'BSB',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                           SizedBox(width: 8),
                           Chip(
-                            label: Text('Downloaded', style: TextStyle(fontSize: 10)),
+                            label: Text(
+                              'Downloaded',
+                              style: TextStyle(fontSize: 10),
+                            ),
                             padding: EdgeInsets.zero,
                             visualDensity: VisualDensity.compact,
                           ),
                         ],
                       ),
-                      subtitle: const Text('Berean Standard Bible (Modern Public Domain)'),
+                      subtitle: const Text(
+                        'Berean Standard Bible (Modern Public Domain)',
+                      ),
                       value: 'BSB',
                       groupValue: state.selectedTranslation,
                       onChanged: (val) {
@@ -315,10 +339,13 @@ class _ReadingViewScreenState extends State<ReadingViewScreen> {
     final fontFamily = _getFontFamily(context, state.isSerifFont);
 
     // Handle combined mode vs single plan mode
-    final activePlans = state.allPlans.where((p) => p.readings.isNotEmpty && p.hasStarted).toList();
+    final activePlans = state.allPlans
+        .where((p) => p.readings.isNotEmpty && p.hasStarted)
+        .toList();
     final isCombinedMode = state.combinePlansOnToday && activePlans.length > 1;
 
-    final primaryReading = state.todayReading ??
+    final primaryReading =
+        state.todayReading ??
         const DailyReading(
           id: 'default_passage',
           dayNumber: 1,
@@ -342,7 +369,9 @@ class _ReadingViewScreenState extends State<ReadingViewScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(isCombinedMode ? 'Combined Today Reading' : primaryReading.title),
+        title: Text(
+          isCombinedMode ? 'Combined Today Reading' : primaryReading.title,
+        ),
         actions: [
           TextButton(
             onPressed: () => _showTranslationSheet(context, state),
@@ -369,7 +398,9 @@ class _ReadingViewScreenState extends State<ReadingViewScreen> {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                isCombinedMode ? 'Combined Active Plans' : '~${primaryReading.estimatedMinutes} min read',
+                isCombinedMode
+                    ? 'Combined Active Plans'
+                    : '~${primaryReading.estimatedMinutes} min read',
                 style: theme.textTheme.labelMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: theme.colorScheme.primary,
@@ -378,7 +409,9 @@ class _ReadingViewScreenState extends State<ReadingViewScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              isCombinedMode ? 'Today\'s Combined Scripture Portions' : primaryReading.title,
+              isCombinedMode
+                  ? 'Today\'s Combined Scripture Portions'
+                  : primaryReading.title,
               style: theme.textTheme.headlineMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 fontFamily: fontFamily,
@@ -399,7 +432,10 @@ class _ReadingViewScreenState extends State<ReadingViewScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: theme.colorScheme.primaryContainer,
                         borderRadius: BorderRadius.circular(8),
@@ -414,14 +450,26 @@ class _ReadingViewScreenState extends State<ReadingViewScreen> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    ..._buildPassagesList(context, state, theme, reading.passages, fontFamily),
+                    ..._buildPassagesList(
+                      context,
+                      state,
+                      theme,
+                      reading.passages,
+                      fontFamily,
+                    ),
                     const Divider(height: 36),
                   ],
                 );
               }),
             ] else ...[
               // Single active plan passages
-              ..._buildPassagesList(context, state, theme, primaryReading.passages, fontFamily),
+              ..._buildPassagesList(
+                context,
+                state,
+                theme,
+                primaryReading.passages,
+                fontFamily,
+              ),
             ],
 
             const SizedBox(height: 30),
@@ -452,7 +500,9 @@ class _ReadingViewScreenState extends State<ReadingViewScreen> {
                         Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text('🎉 Reading complete! Streak updated!'),
+                            content: Text(
+                              '🎉 Reading complete! Streak updated!',
+                            ),
                             behavior: SnackBarBehavior.floating,
                           ),
                         );
@@ -479,8 +529,13 @@ class _ReadingViewScreenState extends State<ReadingViewScreen> {
     );
   }
 
-  List<Widget> _buildPassagesList(BuildContext context, AppState state,
-      ThemeData theme, List<Passage> passages, String? fontFamily) {
+  List<Widget> _buildPassagesList(
+    BuildContext context,
+    AppState state,
+    ThemeData theme,
+    List<Passage> passages,
+    String? fontFamily,
+  ) {
     return passages.map((passage) {
       final chapterWidgets = <Widget>[];
 
@@ -491,8 +546,12 @@ class _ReadingViewScreenState extends State<ReadingViewScreen> {
             builder: (context, snapshot) {
               final loadedVerses = snapshot.data ?? [];
 
-              final startV = (ch == passage.startChapter) ? passage.startVerse : 1;
-              final endV = (ch == passage.endChapter) ? passage.endVerse : loadedVerses.length;
+              final startV = (ch == passage.startChapter)
+                  ? passage.startVerse
+                  : 1;
+              final endV = (ch == passage.endChapter)
+                  ? passage.endVerse
+                  : loadedVerses.length;
 
               final filteredVerses = loadedVerses.asMap().entries.where((e) {
                 final vNum = e.key + 1;
@@ -520,7 +579,8 @@ class _ReadingViewScreenState extends State<ReadingViewScreen> {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  if (snapshot.connectionState == ConnectionState.waiting && loadedVerses.isEmpty)
+                  if (snapshot.connectionState == ConnectionState.waiting &&
+                      loadedVerses.isEmpty)
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 12),
                       child: Center(

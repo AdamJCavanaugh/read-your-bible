@@ -28,11 +28,11 @@ class PlanCard extends StatelessWidget {
         side: isCompleted
             ? BorderSide(color: Colors.green.shade400, width: 2)
             : isActive
-                ? BorderSide(color: theme.colorScheme.primary, width: 2)
-                : BorderSide(
-                    color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
-                    width: 1,
-                  ),
+            ? BorderSide(color: theme.colorScheme.primary, width: 2)
+            : BorderSide(
+                color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+                width: 1,
+              ),
       ),
       color: isCompleted ? Colors.green.shade50.withValues(alpha: 0.3) : null,
       child: InkWell(
@@ -47,7 +47,10 @@ class PlanCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: isCompleted
                           ? Colors.green.shade100
@@ -78,14 +81,21 @@ class PlanCard extends StatelessWidget {
                   ),
                   if (isActive)
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: theme.colorScheme.primary,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Row(
                         children: [
-                          Icon(Icons.check_circle, size: 14, color: Colors.white),
+                          Icon(
+                            Icons.check_circle,
+                            size: 14,
+                            color: Colors.white,
+                          ),
                           SizedBox(width: 4),
                           Text(
                             'Active Plan',
@@ -100,14 +110,21 @@ class PlanCard extends StatelessWidget {
                     )
                   else if (isCompleted)
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.green.shade100,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
                         children: [
-                          Icon(Icons.emoji_events, size: 14, color: Colors.green.shade800),
+                          Icon(
+                            Icons.emoji_events,
+                            size: 14,
+                            color: Colors.green.shade800,
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             'Fully Completed',
@@ -163,7 +180,9 @@ class PlanCard extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.8,
+                  ),
                   height: 1.4,
                 ),
               ),
@@ -176,7 +195,9 @@ class PlanCard extends StatelessWidget {
                       Icon(
                         Icons.group_outlined,
                         size: 16,
-                        color: isCompleted ? Colors.green.shade800 : theme.colorScheme.primary,
+                        color: isCompleted
+                            ? Colors.green.shade800
+                            : theme.colorScheme.primary,
                       ),
                       const SizedBox(width: 6),
                       Text(
@@ -184,7 +205,9 @@ class PlanCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: isCompleted ? Colors.green.shade800 : theme.colorScheme.primary,
+                          color: isCompleted
+                              ? Colors.green.shade800
+                              : theme.colorScheme.primary,
                         ),
                       ),
                     ],
@@ -193,7 +216,10 @@ class PlanCard extends StatelessWidget {
                     FilledButton.tonal(
                       onPressed: onActivate,
                       style: FilledButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
                         minimumSize: Size.zero,
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
@@ -203,7 +229,9 @@ class PlanCard extends StatelessWidget {
                     Icon(
                       Icons.arrow_forward_ios,
                       size: 14,
-                      color: isCompleted ? Colors.green.shade400 : theme.colorScheme.outline,
+                      color: isCompleted
+                          ? Colors.green.shade400
+                          : theme.colorScheme.outline,
                     ),
                 ],
               ),

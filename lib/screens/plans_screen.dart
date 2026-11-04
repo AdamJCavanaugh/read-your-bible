@@ -15,7 +15,11 @@ class PlansScreen extends StatefulWidget {
 class _PlansScreenState extends State<PlansScreen> {
   bool _showCompletedPlans = false;
 
-  void _showPlanDetailsModal(BuildContext context, ReadingPlan plan, AppState state) {
+  void _showPlanDetailsModal(
+    BuildContext context,
+    ReadingPlan plan,
+    AppState state,
+  ) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -78,9 +82,7 @@ class _PlansScreenState extends State<PlansScreen> {
                   const SizedBox(height: 12),
                   Text(
                     plan.description,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      height: 1.5,
-                    ),
+                    style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
                   ),
                   const SizedBox(height: 20),
                   Row(
@@ -91,7 +93,8 @@ class _PlansScreenState extends State<PlansScreen> {
                             Navigator.pop(ctx);
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (_) => PlanScheduleEditorScreen(plan: plan),
+                                builder: (_) =>
+                                    PlanScheduleEditorScreen(plan: plan),
                               ),
                             );
                           },
@@ -102,9 +105,11 @@ class _PlansScreenState extends State<PlansScreen> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: FilledButton.icon(
-                          onPressed: isPlanCompleted ? null : () {
-                            _confirmDeletePlan(context, state, plan);
-                          },
+                          onPressed: isPlanCompleted
+                              ? null
+                              : () {
+                                  _confirmDeletePlan(context, state, plan);
+                                },
                           icon: const Icon(Icons.delete_outline),
                           label: const Text('Delete Plan'),
                           style: FilledButton.styleFrom(
@@ -129,7 +134,8 @@ class _PlansScreenState extends State<PlansScreen> {
                           Navigator.pop(ctx);
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) => PlanScheduleEditorScreen(plan: plan),
+                              builder: (_) =>
+                                  PlanScheduleEditorScreen(plan: plan),
                             ),
                           );
                         },
@@ -167,7 +173,8 @@ class _PlansScreenState extends State<PlansScreen> {
                         Navigator.pop(ctx);
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (_) => PlanScheduleEditorScreen(plan: plan),
+                            builder: (_) =>
+                                PlanScheduleEditorScreen(plan: plan),
                           ),
                         );
                       },
@@ -182,7 +189,11 @@ class _PlansScreenState extends State<PlansScreen> {
     );
   }
 
-  void _confirmDeletePlan(BuildContext context, AppState state, ReadingPlan plan) {
+  void _confirmDeletePlan(
+    BuildContext context,
+    AppState state,
+    ReadingPlan plan,
+  ) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -223,8 +234,12 @@ class _PlansScreenState extends State<PlansScreen> {
     final theme = Theme.of(context);
 
     // Separate active and completed plans
-    final activePlans = state.allPlans.where((p) => !state.isPlanFullyCompleted(p.id)).toList();
-    final completedPlans = state.allPlans.where((p) => state.isPlanFullyCompleted(p.id)).toList();
+    final activePlans = state.allPlans
+        .where((p) => !state.isPlanFullyCompleted(p.id))
+        .toList();
+    final completedPlans = state.allPlans
+        .where((p) => state.isPlanFullyCompleted(p.id))
+        .toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -235,9 +250,7 @@ class _PlansScreenState extends State<PlansScreen> {
             icon: const Icon(Icons.add_task),
             onPressed: () {
               Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => const CreatePlanScreen(),
-                ),
+                MaterialPageRoute(builder: (_) => const CreatePlanScreen()),
               );
             },
           ),
@@ -245,11 +258,9 @@ class _PlansScreenState extends State<PlansScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => const CreatePlanScreen(),
-            ),
-          );
+          Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (_) => const CreatePlanScreen()));
         },
         icon: const Icon(Icons.add),
         label: const Text('Create Plan'),
@@ -396,7 +407,9 @@ class _PlansScreenState extends State<PlansScreen> {
                       });
                     },
                     icon: Icon(
-                      _showCompletedPlans ? Icons.expand_less : Icons.expand_more,
+                      _showCompletedPlans
+                          ? Icons.expand_less
+                          : Icons.expand_more,
                     ),
                     tooltip: _showCompletedPlans ? 'Collapse' : 'Expand',
                   ),

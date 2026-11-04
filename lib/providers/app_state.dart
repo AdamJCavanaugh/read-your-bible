@@ -24,15 +24,20 @@ class AppState extends ChangeNotifier {
   String _selectedTranslation = 'KJV';
   String get selectedTranslation => _selectedTranslation;
 
-  Set<String> get installedTranslations => _scriptureService.installedTranslations;
+  Set<String> get installedTranslations =>
+      _scriptureService.installedTranslations;
 
-  bool isTranslationInstalled(String code) => _scriptureService.isInstalled(code);
+  bool isTranslationInstalled(String code) =>
+      _scriptureService.isInstalled(code);
 
-  double getTranslationDownloadProgress(String code) => _scriptureService.getDownloadProgress(code);
+  double getTranslationDownloadProgress(String code) =>
+      _scriptureService.getDownloadProgress(code);
 
-  bool isTranslationDownloading(String code) => _scriptureService.isDownloading(code);
+  bool isTranslationDownloading(String code) =>
+      _scriptureService.isDownloading(code);
 
-  String getTranslationDownloadSize(String code) => _scriptureService.getFileSizeDisplay(code);
+  String getTranslationDownloadSize(String code) =>
+      _scriptureService.getFileSizeDisplay(code);
 
   double _fontSize = 18.0;
   double get fontSize => _fontSize;
@@ -140,7 +145,10 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<String>> getVersesForPassageAsync(String book, String chapter) async {
+  Future<List<String>> getVersesForPassageAsync(
+    String book,
+    String chapter,
+  ) async {
     final chNum = int.tryParse(chapter) ?? 1;
     return await _scriptureService.fetchVersesAsync(
       book: book,
@@ -170,7 +178,10 @@ class AppState extends ChangeNotifier {
 
   // Check if today is completed for a plan
   bool isTodayCompletedForPlan(String planId) {
-    final plan = _allPlans.firstWhere((p) => p.id == planId, orElse: () => _allPlans.first);
+    final plan = _allPlans.firstWhere(
+      (p) => p.id == planId,
+      orElse: () => _allPlans.first,
+    );
     if (!plan.hasStarted) return false;
     final todayStr = _getTodayStringForPlan(plan);
     return isDateCompletedForPlan(planId, todayStr);
@@ -183,14 +194,20 @@ class AppState extends ChangeNotifier {
 
   // Get plan progress percentage
   double getPlanProgressPercentage(String planId) {
-    final plan = _allPlans.firstWhere((p) => p.id == planId, orElse: () => _allPlans.first);
+    final plan = _allPlans.firstWhere(
+      (p) => p.id == planId,
+      orElse: () => _allPlans.first,
+    );
     if (plan.durationDays == 0) return 0.0;
     final completedCount = _planCompletedDates[planId]?.length ?? 0;
     return (completedCount / plan.durationDays).clamp(0.0, 1.0);
   }
 
   bool isPlanFullyCompleted(String planId) {
-    final plan = _allPlans.firstWhere((p) => p.id == planId, orElse: () => _allPlans.first);
+    final plan = _allPlans.firstWhere(
+      (p) => p.id == planId,
+      orElse: () => _allPlans.first,
+    );
     if (plan.durationDays == 0) return false;
     final completedCount = _planCompletedDates[planId]?.length ?? 0;
     return completedCount >= plan.durationDays;
@@ -198,19 +215,24 @@ class AppState extends ChangeNotifier {
 
   // Toggle completion for today
   void togglePlanDayCompletion(String planId, int dayIndex) {
-    final plan = _allPlans.firstWhere((p) => p.id == planId, orElse: () => _allPlans.first);
-    
+    final plan = _allPlans.firstWhere(
+      (p) => p.id == planId,
+      orElse: () => _allPlans.first,
+    );
+
     // Only allow completion if plan has started
     if (!plan.hasStarted) return;
 
     // Use today's actual date
     final todayStr = _getTodayStringForPlan(plan);
-    
+
     _planCompletedDates.putIfAbsent(planId, () => {});
     final completedSet = _planCompletedDates[planId]!;
 
-    final reading = (plan.getCurrentDayIndex() >= 0 && plan.getCurrentDayIndex() < plan.readings.length) 
-        ? plan.readings[plan.getCurrentDayIndex()] 
+    final reading =
+        (plan.getCurrentDayIndex() >= 0 &&
+            plan.getCurrentDayIndex() < plan.readings.length)
+        ? plan.readings[plan.getCurrentDayIndex()]
         : null;
 
     if (completedSet.contains(todayStr)) {
@@ -231,7 +253,9 @@ class AppState extends ChangeNotifier {
 
   // Combined completion toggle for all active plans today
   void toggleAllPlansTodayCompletion() {
-    final plans = _allPlans.where((p) => p.readings.isNotEmpty && p.hasStarted).toList();
+    final plans = _allPlans
+        .where((p) => p.readings.isNotEmpty && p.hasStarted)
+        .toList();
     if (plans.isEmpty) return;
 
     final allCompleted = plans.every((p) => isTodayCompletedForPlan(p.id));
@@ -253,14 +277,19 @@ class AppState extends ChangeNotifier {
   }
 
   bool areAllPlansCompletedToday() {
-    final plans = _allPlans.where((p) => p.readings.isNotEmpty && p.hasStarted).toList();
+    final plans = _allPlans
+        .where((p) => p.readings.isNotEmpty && p.hasStarted)
+        .toList();
     if (plans.isEmpty) return false;
     return plans.every((p) => isTodayCompletedForPlan(p.id));
   }
 
   // Get current day index for a plan based on actual date
   int getCurrentDayIndexForPlan(String planId) {
-    final plan = _allPlans.firstWhere((p) => p.id == planId, orElse: () => _allPlans.first);
+    final plan = _allPlans.firstWhere(
+      (p) => p.id == planId,
+      orElse: () => _allPlans.first,
+    );
     return plan.getCurrentDayIndex();
   }
 
@@ -272,7 +301,7 @@ class AppState extends ChangeNotifier {
     // Only check past dates (today and backwards)
     while (true) {
       final dateStr = checkDate.toIso8601String().split('T').first;
-      
+
       // Get all plans that should have readings on this date
       final applicablePlans = _allPlans.where((p) {
         if (!p.hasStarted) return false;
@@ -283,8 +312,8 @@ class AppState extends ChangeNotifier {
 
       if (applicablePlans.isEmpty) break;
 
-      final allCompleted = applicablePlans.every((p) => 
-        _planCompletedDates[p.id]?.contains(dateStr) ?? false
+      final allCompleted = applicablePlans.every(
+        (p) => _planCompletedDates[p.id]?.contains(dateStr) ?? false,
       );
 
       if (allCompleted) {
@@ -304,7 +333,7 @@ class AppState extends ChangeNotifier {
     final plan = activePlan;
     if (plan == null || plan.readings.isEmpty) return null;
     if (!plan.hasStarted) return null;
-    
+
     final dayIndex = plan.getCurrentDayIndex();
     if (dayIndex >= 0 && dayIndex < plan.readings.length) {
       return plan.readings[dayIndex];
@@ -312,9 +341,11 @@ class AppState extends ChangeNotifier {
     return plan.readings.first;
   }
 
-  bool get isTodayCompleted => activePlan != null ? isTodayCompletedForPlan(activePlan!.id) : false;
+  bool get isTodayCompleted =>
+      activePlan != null ? isTodayCompletedForPlan(activePlan!.id) : false;
 
-  double get planProgressPercentage => activePlan != null ? getPlanProgressPercentage(activePlan!.id) : 0.0;
+  double get planProgressPercentage =>
+      activePlan != null ? getPlanProgressPercentage(activePlan!.id) : 0.0;
 
   // Plan deletion
   void deletePlan(String planId) {

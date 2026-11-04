@@ -22,7 +22,7 @@ class TodayScreen extends StatelessWidget {
       'September',
       'October',
       'November',
-      'December'
+      'December',
     ];
     final days = [
       'Monday',
@@ -31,7 +31,7 @@ class TodayScreen extends StatelessWidget {
       'Thursday',
       'Friday',
       'Saturday',
-      'Sunday'
+      'Sunday',
     ];
     return '${days[now.weekday - 1]}, ${months[now.month - 1]} ${now.day}';
   }
@@ -40,7 +40,9 @@ class TodayScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = AppStateScope.of(context);
     final theme = Theme.of(context);
-    final activePlans = state.allPlans.where((p) => p.readings.isNotEmpty && p.hasStarted).toList();
+    final activePlans = state.allPlans
+        .where((p) => p.readings.isNotEmpty && p.hasStarted)
+        .toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -106,10 +108,7 @@ class TodayScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(24),
                     child: Column(
                       children: [
-                        const Icon(
-                          Icons.add_task,
-                          size: 48,
-                        ),
+                        const Icon(Icons.add_task, size: 48),
                         const SizedBox(height: 12),
                         Text(
                           'No Reading Plan Yet',
@@ -141,7 +140,8 @@ class TodayScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-              ] else if (state.combinePlansOnToday && activePlans.length > 1) ...[
+              ] else if (state.combinePlansOnToday &&
+                  activePlans.length > 1) ...[
                 // Combined View for multiple plans
                 _buildCombinedPlanCard(context, state, theme, activePlans),
               ] else ...[
@@ -157,7 +157,12 @@ class TodayScreen extends StatelessWidget {
                         ),
                       ),
                       TextButton.icon(
-                        onPressed: () => _showCompletedPlansBottomSheet(context, state, theme, activePlans),
+                        onPressed: () => _showCompletedPlansBottomSheet(
+                          context,
+                          state,
+                          theme,
+                          activePlans,
+                        ),
                         icon: const Icon(Icons.check_circle_outline, size: 18),
                         label: const Text('View Completed'),
                       ),
@@ -165,7 +170,9 @@ class TodayScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                 ],
-                ...activePlans.map((plan) => _buildPlanCard(context, state, theme, plan)),
+                ...activePlans.map(
+                  (plan) => _buildPlanCard(context, state, theme, plan),
+                ),
                 // Show completed plans section if any are completed
                 _buildCompletedPlansSection(context, state, theme, activePlans),
               ],
@@ -178,7 +185,12 @@ class TodayScreen extends StatelessWidget {
     );
   }
 
-  void _showCompletedPlansBottomSheet(BuildContext context, AppState state, ThemeData theme, List<ReadingPlan> activePlans) {
+  void _showCompletedPlansBottomSheet(
+    BuildContext context,
+    AppState state,
+    ThemeData theme,
+    List<ReadingPlan> activePlans,
+  ) {
     final completedPlans = activePlans.where((p) {
       return state.isTodayCompletedForPlan(p.id);
     }).toList();
@@ -193,7 +205,10 @@ class TodayScreen extends StatelessWidget {
       builder: (ctx) {
         final List<Widget> completedTiles = completedPlans.map((plan) {
           final today = plan.readings.isNotEmpty
-              ? plan.readings[plan.getCurrentDayIndex().clamp(0, plan.readings.length - 1)]
+              ? plan.readings[plan.getCurrentDayIndex().clamp(
+                  0,
+                  plan.readings.length - 1,
+                )]
               : null;
           return ListTile(
             contentPadding: EdgeInsets.zero,
@@ -201,13 +216,19 @@ class TodayScreen extends StatelessWidget {
               backgroundColor: Colors.green.shade100,
               child: Icon(Icons.check, color: Colors.green.shade800),
             ),
-            title: Text(plan.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+            title: Text(
+              plan.title,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
             subtitle: Text(today?.title ?? ''),
             trailing: IconButton(
               icon: const Icon(Icons.undo, color: Colors.orange),
               tooltip: 'Mark as Incomplete',
               onPressed: () {
-                state.togglePlanDayCompletion(plan.id, plan.getCurrentDayIndex());
+                state.togglePlanDayCompletion(
+                  plan.id,
+                  plan.getCurrentDayIndex(),
+                );
                 Navigator.pop(ctx);
               },
             ),
@@ -225,7 +246,9 @@ class TodayScreen extends StatelessWidget {
                 children: [
                   Text(
                     'Completed Today',
-                    style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   IconButton(
                     icon: const Icon(Icons.close),
@@ -242,8 +265,15 @@ class TodayScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCompletedPlansSection(BuildContext context, AppState state, ThemeData theme, List<ReadingPlan> activePlans) {
-    final completedPlans = activePlans.where((p) => state.isTodayCompletedForPlan(p.id)).toList();
+  Widget _buildCompletedPlansSection(
+    BuildContext context,
+    AppState state,
+    ThemeData theme,
+    List<ReadingPlan> activePlans,
+  ) {
+    final completedPlans = activePlans
+        .where((p) => state.isTodayCompletedForPlan(p.id))
+        .toList();
 
     if (completedPlans.isEmpty) return const SizedBox.shrink();
 
@@ -262,7 +292,12 @@ class TodayScreen extends StatelessWidget {
               ),
             ),
             TextButton.icon(
-              onPressed: () => _showCompletedPlansBottomSheet(context, state, theme, activePlans),
+              onPressed: () => _showCompletedPlansBottomSheet(
+                context,
+                state,
+                theme,
+                activePlans,
+              ),
               icon: const Icon(Icons.expand_more, size: 18),
               label: const Text('View All'),
             ),
@@ -271,9 +306,12 @@ class TodayScreen extends StatelessWidget {
         const SizedBox(height: 12),
         ...completedPlans.map((plan) {
           final today = plan.readings.isNotEmpty
-              ? plan.readings[plan.getCurrentDayIndex().clamp(0, plan.readings.length - 1)]
+              ? plan.readings[plan.getCurrentDayIndex().clamp(
+                  0,
+                  plan.readings.length - 1,
+                )]
               : null;
-          
+
           return Card(
             margin: const EdgeInsets.only(bottom: 12),
             color: Colors.green.shade50.withValues(alpha: 0.3),
@@ -283,11 +321,18 @@ class TodayScreen extends StatelessWidget {
             ),
             child: ExpansionTile(
               initiallyExpanded: false,
-              tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              tilePadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 8,
+              ),
               leading: CircleAvatar(
                 radius: 20,
                 backgroundColor: Colors.green.shade100,
-                child: Icon(Icons.check, color: Colors.green.shade800, size: 22),
+                child: Icon(
+                  Icons.check,
+                  color: Colors.green.shade800,
+                  size: 22,
+                ),
               ),
               title: Text(
                 plan.title,
@@ -301,14 +346,19 @@ class TodayScreen extends StatelessWidget {
                 today?.title ?? '',
                 style: TextStyle(
                   decoration: TextDecoration.lineThrough,
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.7,
+                  ),
                 ),
               ),
               trailing: IconButton(
                 icon: Icon(Icons.undo, color: Colors.orange.shade700),
                 tooltip: 'Mark as Incomplete',
                 onPressed: () {
-                  state.togglePlanDayCompletion(plan.id, plan.getCurrentDayIndex());
+                  state.togglePlanDayCompletion(
+                    plan.id,
+                    plan.getCurrentDayIndex(),
+                  );
                 },
               ),
               children: [
@@ -319,7 +369,10 @@ class TodayScreen extends StatelessWidget {
                       Expanded(
                         child: OutlinedButton.icon(
                           onPressed: () {
-                            state.togglePlanDayCompletion(plan.id, plan.getCurrentDayIndex());
+                            state.togglePlanDayCompletion(
+                              plan.id,
+                              plan.getCurrentDayIndex(),
+                            );
                           },
                           icon: const Icon(Icons.undo),
                           label: const Text('Mark Incomplete'),
@@ -341,9 +394,16 @@ class TodayScreen extends StatelessWidget {
   }
 
   Widget _buildPlanCard(
-      BuildContext context, AppState state, ThemeData theme, ReadingPlan plan) {
+    BuildContext context,
+    AppState state,
+    ThemeData theme,
+    ReadingPlan plan,
+  ) {
     final today = plan.readings.isNotEmpty
-        ? plan.readings[plan.getCurrentDayIndex().clamp(0, plan.readings.length - 1)]
+        ? plan.readings[plan.getCurrentDayIndex().clamp(
+            0,
+            plan.readings.length - 1,
+          )]
         : null;
     final isCompleted = today != null && state.isTodayCompletedForPlan(plan.id);
     final progress = state.getPlanProgressPercentage(plan.id);
@@ -356,9 +416,7 @@ class TodayScreen extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       elevation: 1,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -409,8 +467,10 @@ class TodayScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: theme.colorScheme.secondaryContainer,
                       borderRadius: BorderRadius.circular(12),
@@ -470,13 +530,14 @@ class TodayScreen extends StatelessWidget {
                       backgroundColor: theme.colorScheme.surfaceContainerHigh,
                     ),
                     onPressed: () {
-                      state.togglePlanDayCompletion(plan.id, plan.getCurrentDayIndex());
+                      state.togglePlanDayCompletion(
+                        plan.id,
+                        plan.getCurrentDayIndex(),
+                      );
                       ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text(
-                            '🎉 "${plan.title}" marked complete!',
-                          ),
+                          content: Text('🎉 "${plan.title}" marked complete!'),
                           behavior: SnackBarBehavior.floating,
                           duration: const Duration(seconds: 2),
                         ),
@@ -496,14 +557,21 @@ class TodayScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCombinedPlanCard(BuildContext context, AppState state,
-      ThemeData theme, List<ReadingPlan> activePlans) {
+  Widget _buildCombinedPlanCard(
+    BuildContext context,
+    AppState state,
+    ThemeData theme,
+    List<ReadingPlan> activePlans,
+  ) {
     int totalEstimatedMins = 0;
     final planAssignments = <Map<String, dynamic>>[];
 
     for (final plan in activePlans) {
       final today = plan.readings.isNotEmpty
-          ? plan.readings[plan.getCurrentDayIndex().clamp(0, plan.readings.length - 1)]
+          ? plan.readings[plan.getCurrentDayIndex().clamp(
+              0,
+              plan.readings.length - 1,
+            )]
           : null;
       if (today != null) {
         totalEstimatedMins += today.estimatedMinutes;
@@ -519,14 +587,18 @@ class TodayScreen extends StatelessWidget {
 
     // If all completed, show collapsed version
     if (areAllCompleted) {
-      return _buildCombinedCompletedCard(context, state, theme, activePlans, totalEstimatedMins);
+      return _buildCombinedCompletedCard(
+        context,
+        state,
+        theme,
+        activePlans,
+        totalEstimatedMins,
+      );
     }
 
     return Card(
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -574,11 +646,11 @@ class TodayScreen extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: isCompleted 
+                    color: isCompleted
                         ? Colors.green.shade50.withValues(alpha: 0.5)
                         : theme.colorScheme.surfaceContainerHigh,
                     borderRadius: BorderRadius.circular(12),
-                    border: isCompleted 
+                    border: isCompleted
                         ? Border.all(color: Colors.green.shade200)
                         : null,
                   ),
@@ -587,7 +659,10 @@ class TodayScreen extends StatelessWidget {
                       Checkbox(
                         value: isCompleted,
                         onChanged: (val) {
-                          state.togglePlanDayCompletion(plan.id, plan.getCurrentDayIndex());
+                          state.togglePlanDayCompletion(
+                            plan.id,
+                            plan.getCurrentDayIndex(),
+                          );
                         },
                         activeColor: Colors.green,
                       ),
@@ -609,9 +684,12 @@ class TodayScreen extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
-                                decoration: isCompleted ? TextDecoration.lineThrough : null,
-                                color: isCompleted 
-                                    ? theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6)
+                                decoration: isCompleted
+                                    ? TextDecoration.lineThrough
+                                    : null,
+                                color: isCompleted
+                                    ? theme.colorScheme.onSurfaceVariant
+                                          .withValues(alpha: 0.6)
                                     : null,
                               ),
                             ),
@@ -654,7 +732,11 @@ class TodayScreen extends StatelessWidget {
                   onPressed: () {
                     state.toggleAllPlansTodayCompletion();
                   },
-                  icon: Icon(areAllCompleted ? Icons.check_box : Icons.check_box_outline_blank),
+                  icon: Icon(
+                    areAllCompleted
+                        ? Icons.check_box
+                        : Icons.check_box_outline_blank,
+                  ),
                   label: Text(areAllCompleted ? 'All Done ✓' : 'Mark All'),
                 ),
               ],
@@ -665,8 +747,13 @@ class TodayScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCombinedCompletedCard(BuildContext context, AppState state,
-      ThemeData theme, List<ReadingPlan> activePlans, int totalEstimatedMins) {
+  Widget _buildCombinedCompletedCard(
+    BuildContext context,
+    AppState state,
+    ThemeData theme,
+    List<ReadingPlan> activePlans,
+    int totalEstimatedMins,
+  ) {
     return Card(
       elevation: 1,
       color: Colors.green.shade50.withValues(alpha: 0.3),
@@ -684,7 +771,11 @@ class TodayScreen extends StatelessWidget {
                 CircleAvatar(
                   radius: 24,
                   backgroundColor: Colors.green.shade100,
-                  child: Icon(Icons.check_circle, color: Colors.green.shade800, size: 28),
+                  child: Icon(
+                    Icons.check_circle,
+                    color: Colors.green.shade800,
+                    size: 28,
+                  ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -713,7 +804,10 @@ class TodayScreen extends StatelessWidget {
             const Divider(height: 24),
             Text(
               'All ${activePlans.length} plans completed for today.',
-              style: TextStyle(color: Colors.green.shade800, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                color: Colors.green.shade800,
+                fontWeight: FontWeight.w500,
+              ),
             ),
             const SizedBox(height: 16),
             OutlinedButton.icon(

@@ -23,7 +23,8 @@ class ProgressRing extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final activeColor = primaryColor ?? theme.colorScheme.primary;
-    final trackColor = backgroundColor ??
+    final trackColor =
+        backgroundColor ??
         theme.colorScheme.primaryContainer.withValues(alpha: 0.3);
 
     return SizedBox(
@@ -86,11 +87,7 @@ class _RingPainter extends CustomPainter {
         ..strokeWidth = strokeWidth
         ..strokeCap = StrokeCap.round
         ..shader = SweepGradient(
-          colors: [
-            activeColor,
-            secondaryColor,
-            activeColor,
-          ],
+          colors: [activeColor, secondaryColor, activeColor],
           transform: const GradientRotation(-pi / 2),
         ).createShader(rect);
 

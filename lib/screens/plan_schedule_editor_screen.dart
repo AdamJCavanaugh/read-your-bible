@@ -6,10 +6,7 @@ import '../providers/app_state.dart';
 class PlanScheduleEditorScreen extends StatefulWidget {
   final ReadingPlan plan;
 
-  const PlanScheduleEditorScreen({
-    super.key,
-    required this.plan,
-  });
+  const PlanScheduleEditorScreen({super.key, required this.plan});
 
   @override
   State<PlanScheduleEditorScreen> createState() =>
@@ -20,7 +17,11 @@ class _PlanScheduleEditorScreenState extends State<PlanScheduleEditorScreen> {
   String _searchQuery = '';
 
   void _showEditDayModal(
-      BuildContext context, AppState state, DailyReading reading, int dayIndex) {
+    BuildContext context,
+    AppState state,
+    DailyReading reading,
+    int dayIndex,
+  ) {
     final passage = reading.passages.isNotEmpty
         ? reading.passages.first
         : Passage(
@@ -33,14 +34,16 @@ class _PlanScheduleEditorScreenState extends State<PlanScheduleEditorScreen> {
           );
 
     String selectedBook = passage.book;
-    final startChController =
-        TextEditingController(text: '${passage.startChapter}');
-    final startVsController =
-        TextEditingController(text: '${passage.startVerse}');
-    final endChController =
-        TextEditingController(text: '${passage.endChapter}');
-    final endVsController =
-        TextEditingController(text: '${passage.endVerse}');
+    final startChController = TextEditingController(
+      text: '${passage.startChapter}',
+    );
+    final startVsController = TextEditingController(
+      text: '${passage.startVerse}',
+    );
+    final endChController = TextEditingController(
+      text: '${passage.endChapter}',
+    );
+    final endVsController = TextEditingController(text: '${passage.endVerse}');
 
     showModalBottomSheet(
       context: context,
@@ -125,8 +128,7 @@ class _PlanScheduleEditorScreenState extends State<PlanScheduleEditorScreen> {
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
-                                    color:
-                                        theme.colorScheme.onPrimaryContainer,
+                                    color: theme.colorScheme.onPrimaryContainer,
                                   ),
                                 ),
                               ],
@@ -147,10 +149,7 @@ class _PlanScheduleEditorScreenState extends State<PlanScheduleEditorScreen> {
                         ),
                       ),
                       items: BibleData.allBooks.map((b) {
-                        return DropdownMenuItem(
-                          value: b,
-                          child: Text(b),
-                        );
+                        return DropdownMenuItem(value: b, child: Text(b));
                       }).toList(),
                       onChanged: (val) {
                         if (val != null) {
@@ -300,9 +299,7 @@ class _PlanScheduleEditorScreenState extends State<PlanScheduleEditorScreen> {
           }).toList();
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('${plan.title} Schedule'),
-      ),
+      appBar: AppBar(title: Text('${plan.title} Schedule')),
       body: Column(
         children: [
           // Header Card
@@ -341,7 +338,8 @@ class _PlanScheduleEditorScreenState extends State<PlanScheduleEditorScreen> {
                 // Search Bar
                 TextField(
                   decoration: InputDecoration(
-                    hintText: 'Search day number or passage (e.g. Day 5 or Psalms)...',
+                    hintText:
+                        'Search day number or passage (e.g. Day 5 or Psalms)...',
                     prefixIcon: const Icon(Icons.search),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
