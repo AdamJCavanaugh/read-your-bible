@@ -5,6 +5,7 @@ class PlanCard extends StatelessWidget {
   final ReadingPlan plan;
   final bool isActive;
   final bool isCompleted;
+  final bool isDefault;
   final VoidCallback onTap;
   final VoidCallback? onActivate;
 
@@ -13,6 +14,7 @@ class PlanCard extends StatelessWidget {
     required this.plan,
     required this.isActive,
     this.isCompleted = false,
+    this.isDefault = false,
     required this.onTap,
     this.onActivate,
   });
@@ -29,12 +31,18 @@ class PlanCard extends StatelessWidget {
             ? BorderSide(color: Colors.green.shade400, width: 2)
             : isActive
             ? BorderSide(color: theme.colorScheme.primary, width: 2)
+            : isDefault
+            ? BorderSide(color: theme.colorScheme.secondary, width: 2)
             : BorderSide(
                 color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
                 width: 1,
               ),
       ),
-      color: isCompleted ? Colors.green.shade50.withValues(alpha: 0.3) : null,
+      color: isCompleted
+          ? Colors.green.shade50.withValues(alpha: 0.3)
+          : isDefault
+          ? theme.colorScheme.secondaryContainer.withValues(alpha: 0.1)
+          : null,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(20),
@@ -54,6 +62,8 @@ class PlanCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: isCompleted
                           ? Colors.green.shade100
+                          : isDefault
+                          ? theme.colorScheme.secondaryContainer
                           : theme.colorScheme.primaryContainer,
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -65,14 +75,28 @@ class PlanCard extends StatelessWidget {
                             size: 14,
                             color: Colors.green.shade800,
                           ),
+                        if (isDefault) ...[
+                          Icon(
+                            Icons.star,
+                            size: 14,
+                            color: theme.colorScheme.onSecondaryContainer,
+                          ),
+                          const SizedBox(width: 4),
+                        ],
                         if (isCompleted) const SizedBox(width: 4),
                         Text(
-                          isCompleted ? 'Completed' : plan.category,
+                          isCompleted
+                              ? 'Completed'
+                              : isDefault
+                              ? 'Default Plan'
+                              : plan.category,
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
                             color: isCompleted
                                 ? Colors.green.shade800
+                                : isDefault
+                                ? theme.colorScheme.onSecondaryContainer
                                 : theme.colorScheme.onPrimaryContainer,
                           ),
                         ),
@@ -223,7 +247,9 @@ class PlanCard extends StatelessWidget {
                         minimumSize: Size.zero,
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
-                      child: const Text('Start Plan'),
+                      child: isDefault
+                          ? const Text('Start Plan')
+                          : const Text('Activate'),
                     )
                   else
                     Icon(

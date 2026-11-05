@@ -136,6 +136,7 @@ class ReadingPlan {
     String? title,
     String? subtitle,
     String? description,
+    String? category,
     List<DailyReading>? readings,
     DateTime? startDate,
   }) {
@@ -145,7 +146,7 @@ class ReadingPlan {
       subtitle: subtitle ?? this.subtitle,
       description: description ?? this.description,
       durationDays: durationDays,
-      category: category,
+      category: category ?? this.category,
       subscribersCount: subscribersCount,
       isFeatured: isFeatured,
       readings: readings ?? this.readings,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../providers/app_state.dart';
 import '../services/scripture_service.dart';
 
@@ -274,6 +275,19 @@ class SettingsScreen extends StatelessWidget {
                     'downloaded from GitHub on demand. Use "Bible Translation" above to switch your active reading translation.',
                   ),
                   dense: true,
+                ),
+                const Divider(height: 1, indent: 16, endIndent: 16),
+                ListTile(
+                  leading: Icon(
+                    Icons.restore,
+                    color: theme.colorScheme.primary,
+                  ),
+                  title: const Text('Reset Default Plans'),
+                  subtitle: const Text(
+                    'Re-create the Alphabetical and Chronological default plans if they are missing',
+                  ),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 14),
+                  onTap: () => _resetDefaultPlans(context, state),
                 ),
               ],
             ),
@@ -668,5 +682,36 @@ class SettingsScreen extends StatelessWidget {
         );
       },
     );
+  }
+
+  void _resetDefaultPlans(BuildContext context, AppState state) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('default_plans_initialized', false);
+      // Re-initialize default plans
+      await state.initDefaultPlans();
+      if (context.mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Default plans reset. They will appear on the Plans screen.',
+            ),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error resetting default plans: $e');
+      if (context.mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error resetting default plans: $e'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    }
   }
 }

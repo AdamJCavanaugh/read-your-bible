@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/reading_plan.dart';
+import '../models/bible_data.dart';
 import '../services/scripture_service.dart';
 
 class AppState extends ChangeNotifier {
@@ -115,7 +117,54 @@ class AppState extends ChangeNotifier {
   List<int> get weeklyMinutes => List.unmodifiable(_weeklyMinutes);
 
   AppState() {
-    _initScriptures();
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    await _initScriptures();
+    await initDefaultPlans();
+  }
+
+  // Initialize default plans on first launch
+  Future<void> initDefaultPlans() async {
+    // Check if default plans have been initialized
+    const defaultPlansKey = 'default_plans_initialized';
+    final prefs = await SharedPreferences.getInstance();
+    final initialized = prefs.getBool(defaultPlansKey) ?? false;
+
+    if (!initialized) {
+      // Create Alphabetical Plan
+      final alphabeticalPlan = createCustomReadingPlan(
+        title: 'Alphabetical Bible',
+        durationDays: 365,
+        selectedBooks: BibleData.alphabeticalBooks,
+        repeatCount: 1,
+        description:
+            'Read through the entire Bible in alphabetical order (Acts → Zephaniah). '
+            'Numbered books sort naturally by their full name (1 Chronicles, 1 Corinthians, etc.).',
+        startDate: DateTime.now(),
+      ).copyWith(category: 'Default');
+
+      // Create Chronological Plan
+      final chronologicalPlan = createCustomReadingPlan(
+        title: 'Chronological Bible',
+        durationDays: 365,
+        selectedBooks: BibleData.chronologicalBooks,
+        repeatCount: 1,
+        description:
+            'Read through the entire Bible in historical chronological order '
+            '(Genesis → Job → Exodus → ... → Revelation). '
+            'Based on the timeline of biblical events.',
+        startDate: DateTime.now(),
+      ).copyWith(category: 'Default');
+
+      // Add to plans list
+      _allPlans.addAll([alphabeticalPlan, chronologicalPlan]);
+
+      // Mark as initialized
+      await prefs.setBool(defaultPlansKey, true);
+      notifyListeners();
+    }
   }
 
   Future<void> _initScriptures() async {
