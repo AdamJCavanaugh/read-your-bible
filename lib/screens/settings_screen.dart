@@ -685,21 +685,33 @@ class SettingsScreen extends StatelessWidget {
   }
 
   void _resetDefaultPlans(BuildContext context, AppState state) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('default_plans_initialized', false);
-    await prefs.setBool('default_plans_initialized', false);
-    // Re-initialize default plans
-    await state.initDefaultPlans();
-    if (context.mounted) {
-      Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Default plans reset. They will appear on the Plans screen.',
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('default_plans_initialized', false);
+      // Re-initialize default plans
+      await state.initDefaultPlans();
+      if (context.mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Default plans reset. They will appear on the Plans screen.',
+            ),
+            behavior: SnackBarBehavior.floating,
           ),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+        );
+      }
+    } catch (e) {
+      debugPrint('Error resetting default plans: $e');
+      if (context.mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error resetting default plans: $e'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
     }
   }
 }

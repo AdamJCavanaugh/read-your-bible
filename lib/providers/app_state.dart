@@ -117,8 +117,12 @@ class AppState extends ChangeNotifier {
   List<int> get weeklyMinutes => List.unmodifiable(_weeklyMinutes);
 
   AppState() {
-    _initScriptures();
-    initDefaultPlans();
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    await _initScriptures();
+    await initDefaultPlans();
   }
 
   // Initialize default plans on first launch
