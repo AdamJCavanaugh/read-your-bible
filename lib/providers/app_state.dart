@@ -118,11 +118,11 @@ class AppState extends ChangeNotifier {
 
   AppState() {
     _initScriptures();
-    _initDefaultPlans();
+    initDefaultPlans();
   }
 
   // Initialize default plans on first launch
-  Future<void> _initDefaultPlans() async {
+  Future<void> initDefaultPlans() async {
     // Check if default plans have been initialized
     const defaultPlansKey = 'default_plans_initialized';
     final prefs = await SharedPreferences.getInstance();
